@@ -27,6 +27,8 @@ TODO: Add simple diagram that explains the architecture.
 ### Test
 
 > .\gradlew app:testReleaseUnitTest
+
+or
 > .\gradlew app:testDebugUnitTest
 
 ### Run
