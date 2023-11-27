@@ -15,19 +15,34 @@ TODO: Add simple diagram that explains the architecture.
 
 ### Prerequisites
 
-TODO: Explain which steps and dependencies are required to run and build the project (e.g., pip install -r requirements.txt)
+- Checkout repo
+- Open project in Android Studio
+- Run gradle build
+- Run app
 
-### Build
+### Gradle Build
 
-TODO: Explain how the whole project can be build.
+> .\gradlew build
 
 ### Test
 
-TODO: Explain how unit- or integreation tests can be executed.
+> .\gradlew app:testReleaseUnitTest
+> .\gradlew app:testDebugUnitTest
 
 ### Run
 
-TODO: Explain how to run the project (client, server etc.).
+The app can only be run on an android device.
+You can run it on an Android emulator or personal android device.
+
+- Go to the "Device Manager"
+- Select a virtual or physical device
+- Run the app with the green arrow or press shift + F10
+
+![run-app-android-studio.png](resources/run-app-android-studio.png)
+
+
+For further information consult the docs:
+https://developer.android.com/studio/run
 
 ## License
 
