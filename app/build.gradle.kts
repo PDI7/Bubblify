@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // Firebase
+    id("com.google.gms.google-services") version "4.4.0" apply false
 }
 
 android {
@@ -66,4 +68,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
 }
