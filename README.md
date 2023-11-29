@@ -17,8 +17,7 @@ TODO: Add simple diagram that explains the architecture.
 
 - Checkout repo
 - Open project in Android Studio
-- Run gradle build
-- Run app
+- Have access to the [Bubblify Firebase Project](https://console.firebase.google.com/u/0/project/bubblify-226b3)
 
 ### Gradle Build
 
@@ -33,10 +32,10 @@ or
 
 ### Setup Firebase connection
 
-TODO
-maybe just download the google-services.json file from:
-https://console.firebase.google.com/u/0/project/bubblify-226b3/settings/general/android:com.example.bubblify
+- Download the `google-services.json` file from the [Firebase settings](https://console.firebase.google.com/u/0/project/bubblify-226b3/settings/general/android:com.example.bubblify)
+- Add it in the `/app` folder. 
 
+![project-structure-with-google-service-json.png](resources/project-structure-with-google-service-json.png)
 
 ### Run
 
