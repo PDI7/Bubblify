@@ -31,6 +31,13 @@ TODO: Add simple diagram that explains the architecture.
 or
 > .\gradlew app:testDebugUnitTest
 
+### Setup Firebase connection
+
+TODO
+maybe just download the google-services.json file from:
+https://console.firebase.google.com/u/0/project/bubblify-226b3/settings/general/android:com.example.bubblify
+
+
 ### Run
 
 The app can only be run on an android device.
@@ -38,7 +45,7 @@ You can run it on an Android emulator or personal android device.
 
 - Go to the "Device Manager"
 - Select a virtual or physical device
-- Run the app with the green arrow or press shift + F10
+- Run the app with the blue arrow on top in Android Studio or press "Shift + F10"
 
 ![run-app-android-studio.png](resources/run-app-android-studio.png)
 
