@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    // Firebase
+    id("com.google.gms.google-services") version "4.4.0" apply false
 }
 
 android {
@@ -72,6 +74,9 @@ dependencies {
     // Coroutines (asynchronous programming)
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
