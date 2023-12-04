@@ -61,6 +61,19 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.foundation:foundation:1.5.4")
+
+    // MVVM implementations
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+    // Using Retrofit for API (Firebase) requests
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // Coroutines (asynchronous programming)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
+
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
