@@ -4,7 +4,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-    // We can change with firebase after !!! It is juste for the demo
+    // We can change with firebase after !!! It is just for the demo
     private const val API_URL = "https://random-data-api.com/api/v2/"
 
     private val retrofit: Retrofit by lazy {
