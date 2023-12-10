@@ -30,7 +30,7 @@ import com.example.bubblify.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(newModel: LoginViewModel, modifier: Modifier = Modifier) {
+fun LoginPage(loginViewModel: LoginViewModel, modifier: Modifier = Modifier) {
 
     Box( //this is the screen
         modifier = modifier
@@ -140,5 +140,5 @@ fun LoginScreen(newModel: LoginViewModel, modifier: Modifier = Modifier) {
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 private fun LoginScreenPreview() {
-    LoginScreen(newModel = LoginViewModel(), Modifier)
+    LoginPage(loginViewModel = LoginViewModel(), Modifier)
 }
