@@ -1,10 +1,7 @@
 package com.example.bubblify.view
 
 
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -17,10 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Work
-import androidx.compose.material.icons.filled.WorkOutline
 import androidx.compose.material.icons.outlined.School
 import androidx.compose.material.icons.outlined.SportsFootball
 import androidx.compose.material.icons.outlined.WorkOutline
@@ -43,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import com.example.bubblify.viewmodel.SetActivityViewModel
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
 
 @Composable
 fun NavBarUI() {
