@@ -13,14 +13,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.bubblify.ui.theme.BubblifyTheme
 import com.example.bubblify.view.UserPage
+import com.example.bubblify.view.LoginPage
+import com.example.bubblify.viewmodel.LoginViewModel
 import com.example.bubblify.viewmodel.UserViewModel
 
 class MainActivity : ComponentActivity() {
     private val viewModel: UserViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             UserPage(viewModel)
+            LoginPage(loginViewModel)
         }
     }
 }
