@@ -22,14 +22,14 @@ import com.example.bubblify.viewmodel.UserViewModel
 
 class MainActivity : ComponentActivity() {
     private val viewModel: UserViewModel by viewModels()
-    private val groupViewModel: GroupViewModel = GroupViewModel()
+    private val groupViewModel: GroupViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             GroupPage(groupViewModel)
-            UserPage(viewModel)
-            LoginPage(loginViewModel)
+            //UserPage(viewModel)
+            //LoginPage(loginViewModel)
         }
     }
 }
