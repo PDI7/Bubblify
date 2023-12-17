@@ -6,4 +6,6 @@ data class Group(
     val id: Int,
     val name: String,
     val color: Long
+    val activities: List<Activity> = emptyList(),
+    val userGroups: List<UserGroup> = emptyList()
 )
