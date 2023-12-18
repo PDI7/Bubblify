@@ -2,6 +2,7 @@ package com.example.bubblify.view
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -95,15 +96,17 @@ fun ProfilePage(profilePageViewModel: ProfilePageViewModel) {
                 .align(alignment = Alignment.TopStart)
                 .offset(x = 222.dp,
                     y = 238.dp)
+                .border(1.dp, Color(0xff0277bd), shape = CircleShape)
+                .background(
+                    color = Color(0xff0277bd),
+                    shape = CircleShape
+                )
         ) {
             Icon(
                 imageVector = Icons.Outlined.CameraAlt,
                 contentDescription = "camera",
-                tint = Color(0xffffffff), //????????????????????
-                modifier = Modifier
-                    .background(color = Color(0xff0277bd))
+                tint = Color(0xffffffff),
             )
-
         }
 
         //username field
