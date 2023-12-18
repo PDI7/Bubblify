@@ -84,7 +84,8 @@ fun ProfilePage(profilePageViewModel: ProfilePageViewModel) {
                 .offset(x = 95.dp, y = 112.dp)
                 .requiredSize(size = 169.dp)
                 .clip(shape = CircleShape)
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
 
         //camera icon button
@@ -95,18 +96,14 @@ fun ProfilePage(profilePageViewModel: ProfilePageViewModel) {
                 .offset(x = 222.dp,
                     y = 238.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .requiredSize(size = 51.dp)
-                    .clip(shape = CircleShape)
-                    .background(color = Color(0xff0277bd))
-                    .offset(x=213.dp, y=230.dp)
-            )
             Icon(
                 imageVector = Icons.Outlined.CameraAlt,
                 contentDescription = "camera",
-                //tint = Color(0xffffff) //????????????????????
+                tint = Color(0xffffffff), //????????????????????
+                modifier = Modifier
+                    .background(color = Color(0xff0277bd))
             )
+
         }
 
         //username field
