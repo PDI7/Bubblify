@@ -21,6 +21,7 @@ import com.example.bubblify.viewmodel.OtherViewModel
 import com.example.bubblify.viewmodel.UserViewModel
 
 class MainActivity : ComponentActivity() {
+    private val viewModel: UserViewModel by viewModels()
     private val otherViewModel: OtherViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
 
