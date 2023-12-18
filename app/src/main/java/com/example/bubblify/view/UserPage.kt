@@ -1,6 +1,6 @@
 package com.example.bubblify.view
 
-import androidx.compose.foundation.layout.Column
+ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,14 +20,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
-import com.example.bubblify.model.BeerResponse
+ import androidx.navigation.NavController
+ import com.example.bubblify.model.BeerResponse
 import com.example.bubblify.model.User
 import com.example.bubblify.ui.theme.BubblifyTheme
 import com.example.bubblify.viewmodel.UserViewModel
 
 
 @Composable
-fun UserPage(viewModel: UserViewModel) {
+fun UserPage(viewModel: UserViewModel, navController: NavController) {
     val users by viewModel.users.observeAsState(null)
     LaunchedEffect(Unit) {
         viewModel.fetchUsers()
