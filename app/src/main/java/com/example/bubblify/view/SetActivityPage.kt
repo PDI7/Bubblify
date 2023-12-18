@@ -67,7 +67,7 @@ fun NavBarUI() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SetActivityPage(modifier: Modifier = Modifier, setActivityViewModel: SetActivityViewModel) {
+fun SetActivityPage(setActivityViewModel: SetActivityViewModel) {
 
     Box(
         Modifier
@@ -163,5 +163,5 @@ fun SetActivityPage(modifier: Modifier = Modifier, setActivityViewModel: SetActi
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun SetActivityPreview() {
-    SetActivityPage(modifier = Modifier, setActivityViewModel = SetActivityViewModel())
+    SetActivityPage(setActivityViewModel = SetActivityViewModel())
 }

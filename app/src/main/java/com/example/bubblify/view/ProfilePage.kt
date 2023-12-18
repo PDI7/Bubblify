@@ -52,7 +52,7 @@ import com.example.bubblify.viewmodel.ProfilePageViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfilePage(modifier: Modifier = Modifier, profilePageViewModel: ProfilePageViewModel) {
+fun ProfilePage(profilePageViewModel: ProfilePageViewModel) {
 
     //screen
     Box(
@@ -96,7 +96,7 @@ fun ProfilePage(modifier: Modifier = Modifier, profilePageViewModel: ProfilePage
                     y = 238.dp)
         ) {
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .requiredSize(size = 51.dp)
                     .clip(shape = CircleShape)
                     .background(color = Color(0xff0277bd))
@@ -133,5 +133,5 @@ fun ProfilePage(modifier: Modifier = Modifier, profilePageViewModel: ProfilePage
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun ProfilePagePreview() {
-    ProfilePage(modifier = Modifier, profilePageViewModel = ProfilePageViewModel())
+    ProfilePage(profilePageViewModel = ProfilePageViewModel())
 }
