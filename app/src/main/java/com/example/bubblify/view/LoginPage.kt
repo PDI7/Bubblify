@@ -26,11 +26,12 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.bubblify.viewmodel.LoginViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginPage(loginViewModel: LoginViewModel) {
+fun LoginPage(loginViewModel: LoginViewModel, navController: NavController) {
 
     Box( //this is the screen
         Modifier
@@ -71,7 +72,9 @@ fun LoginPage(loginViewModel: LoginViewModel) {
 
         //this is the signup button
         OutlinedButton(
-            onClick = { /*TODO*/ },
+            onClick = { /*TODO: check for username/password */
+                      //navController.navigate("groupview")
+                      },
             border = BorderStroke(2.dp, Color.LightGray),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
             modifier = Modifier
@@ -137,8 +140,9 @@ fun LoginPage(loginViewModel: LoginViewModel) {
     }
 }
 
+/*
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 private fun LoginScreenPreview() {
-    LoginPage(loginViewModel = LoginViewModel())
-}
+    LoginPage(loginViewModel = LoginViewModel(), NavController())
+}*/

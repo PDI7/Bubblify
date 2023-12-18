@@ -25,12 +25,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.bubblify.viewmodel.LoginViewModel
 import com.example.bubblify.viewmodel.MoreViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MorePage(moreViewModel: MoreViewModel) {
+fun MorePage(moreViewModel: MoreViewModel, navController: NavController) {
 
     Box( //this is the screen
         Modifier
@@ -78,8 +79,9 @@ fun MorePage(moreViewModel: MoreViewModel) {
     }
 }
 
+/*
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 private fun MorePagePreview() {
     MorePage(moreViewModel = MoreViewModel())
-}
+}*/
