@@ -5,9 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
@@ -16,46 +14,57 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.R
+import com.example.bubblify.viewmodel.BubbleViewModel
 
 
 @Composable
-fun BubblePage() {
+fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostController) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Button(onClick = {
+        Bubble()
+        Bubble(100.dp)
+        Bubble()
+    }
+}
 
-        }, modifier = Modifier.size(300.dp)) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+@Composable
+fun Bubble(bubbleSize: Dp = 200.dp) {
+    Button(onClick = {
+
+    }, modifier = Modifier.size(bubbleSize)) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row(
+                modifier = Modifier.weight(2.5f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
             ) {
-                Row(
-                    modifier = Modifier.weight(2.5f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    for (i in 0..4) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_background),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(CircleShape)
-                        )
-                    }
+                for (i in 0..4) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_launcher_background),
+                        contentDescription = "",
+                        modifier = Modifier
+                            .weight(1f)
+                            .clip(CircleShape)
+                    )
                 }
-                Image(
-                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                    contentDescription = "",
-                    modifier = Modifier.weight(1f),
-                )
             }
+            Image(
+                painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                contentDescription = "",
+                modifier = Modifier.weight(1f),
+            )
         }
     }
 }
@@ -63,5 +72,5 @@ fun BubblePage() {
 @Preview(showBackground = true)
 @Composable
 fun BubblePagePreview(){
-    BubblePage()
+    BubblePage(BubbleViewModel(), rememberNavController())
 }

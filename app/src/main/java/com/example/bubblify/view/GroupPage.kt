@@ -1,6 +1,5 @@
 package com.example.bubblify.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,12 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.viewmodel.GroupViewModel
 
 
 @Composable
-fun GroupPage(groupViewModel: GroupViewModel) {
+fun GroupPage(groupViewModel: GroupViewModel, navController: NavHostController) {
     LazyColumn(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -31,7 +31,8 @@ fun GroupPage(groupViewModel: GroupViewModel) {
         items(groupViewModel.groups.size){ index ->
             Button(
                 colors = ButtonDefaults.buttonColors(Color(groupViewModel.groups[index].color)),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(bottom = 5.dp),
                 onClick = { /*TODO*/ }) {
                 Text(text = groupViewModel.groups[index].name,
@@ -44,5 +45,5 @@ fun GroupPage(groupViewModel: GroupViewModel) {
 @Preview(showBackground = true)
 @Composable
 fun GroupPagePreview() {
-    GroupPage(GroupViewModel())
+    GroupPage(GroupViewModel(), rememberNavController())
 }
