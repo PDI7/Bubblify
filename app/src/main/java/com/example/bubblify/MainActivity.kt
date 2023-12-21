@@ -16,7 +16,6 @@ import com.example.bubblify.view.SetActivityPage
 import com.example.bubblify.view.SignUpPage
 import com.example.bubblify.view.UserPage
 import com.example.bubblify.viewmodel.BubbleListViewModel
-import com.example.bubblify.viewmodel.LoginViewModel
 import com.example.bubblify.viewmodel.MoreViewModel
 import com.example.bubblify.viewmodel.OtherViewModel
 import com.example.bubblify.viewmodel.ProfileViewModel
@@ -29,7 +28,6 @@ class MainActivity : ComponentActivity() {
     private val otherViewModel: OtherViewModel by viewModels()
     private val userViewModel: UserViewModel by viewModels()
     private val profileViewModel: ProfileViewModel by viewModels()
-    private val loginViewModel: LoginViewModel by viewModels()
     private val moreViewModel: MoreViewModel by viewModels()
     private val setActivityViewModel: SetActivityViewModel by viewModels()
     private val bubbleListViewModel: BubbleListViewModel by viewModels()
@@ -39,12 +37,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             // Navigation Core
             val navController = rememberNavController()
+            val mainState = MainState(navController)
             NavHost(navController = navController, startDestination = "login") {
                 composable("user") { UserPage(userViewModel, navController) }
                 composable("other") { OtherPage(otherViewModel, navController) }
                 composable("profile") { ProfilePage(profileViewModel, navController) }
-                composable("login") { LoginPage(loginViewModel, navController) }
-                composable("signUp") { SignUpPage(navController) }
+                composable("login") { LoginPage(mainState) }
+                composable("signUp") { SignUpPage(mainState) }
                 composable("more") { MorePage(moreViewModel, navController) }
                 composable("setActivity") { SetActivityPage(setActivityViewModel, navController) }
                 composable("bubbleList") { BubbleListPage(bubbleListViewModel, navController) }

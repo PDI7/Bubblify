@@ -32,10 +32,6 @@ constructor(private val auth: FirebaseAuth) {
             awaitClose { auth.removeAuthStateListener(listener) }
         }
 
-    suspend fun authenticate(email: String, password: String) {
-        auth.signInWithEmailAndPassword(email, password).await()
-    }
-
     fun loginUser(email: String, password: String): Flow<Resource<AuthResult>> {
         return flow {
             emit(value = Resource.Loading())

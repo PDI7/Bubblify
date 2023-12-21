@@ -11,9 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.bubblify.MainState
 import com.example.bubblify.common.EmailField
 import com.example.bubblify.common.PasswordField
 import com.example.bubblify.common.PrimaryButton
@@ -23,7 +22,10 @@ import com.example.bubblify.common.fieldModifier
 import com.example.bubblify.viewmodel.LoginViewModel
 
 @Composable
-fun LoginPage(viewModel: LoginViewModel, navController: NavController) {
+fun LoginPage(
+    mainState: MainState,
+    viewModel: LoginViewModel = hiltViewModel()
+) {
 
     val uiState by viewModel.uiState
 
@@ -44,18 +46,16 @@ fun LoginPage(viewModel: LoginViewModel, navController: NavController) {
         PasswordField(uiState.password, viewModel::onPasswordChange, fieldModifier)
 
         PrimaryButton(text = "Login", modifier = Modifier.basicButton()) {
-            viewModel.onLogInClick()
+            viewModel.onLogInClick(openAndPopUp = { route, popUp ->
+                mainState.navigateAndPopUp(
+                    route,
+                    popUp
+                )
+            })
         }
 
         SecondaryButton(text = "Sign up", modifier = Modifier.basicButton()) {
-            navController.navigate("signUp")
+            mainState.navigate("signUp")
         }
     }
-}
-
-
-@Preview(widthDp = 360, heightDp = 640)
-@Composable
-private fun LoginScreenPreview() {
-    LoginPage(viewModel = LoginViewModel(), navController = rememberNavController())
 }

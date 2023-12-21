@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.bubblify.MainState
 import com.example.bubblify.common.EmailField
 import com.example.bubblify.common.PasswordField
 import com.example.bubblify.common.PrimaryButton
@@ -24,7 +25,7 @@ import com.example.bubblify.viewmodel.SignUpViewModel
 
 @Composable
 fun SignUpPage(
-    navController: NavController,
+    mainState: MainState,
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState
@@ -52,11 +53,11 @@ fun SignUpPage(
         )
 
         PrimaryButton(text = "Create Account", modifier = Modifier.basicButton()) {
-            viewModel.onSignUpClick()
+            viewModel.onSignUpClick(openAndPopUp = { route, popUp -> mainState.navigateAndPopUp(route, popUp) })
         }
 
         SecondaryButton(text = "Sign In", modifier = Modifier.basicButton()) {
-            navController.navigate("login")
+            mainState.navigate("login")
         }
     }
 }

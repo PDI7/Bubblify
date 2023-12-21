@@ -30,7 +30,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.R
 import com.example.bubblify.viewmodel.ProfileViewModel
 
@@ -78,8 +80,10 @@ fun ProfilePage(profileViewModel: ProfileViewModel, navController: NavController
             onClick = { },
             modifier = Modifier
                 .align(alignment = Alignment.TopStart)
-                .offset(x = 222.dp,
-                    y = 238.dp)
+                .offset(
+                    x = 222.dp,
+                    y = 238.dp
+                )
                 .border(1.dp, Color(0xff0277bd), shape = CircleShape)
                 .background(
                     color = Color(0xff0277bd),
@@ -101,8 +105,10 @@ fun ProfilePage(profileViewModel: ProfileViewModel, navController: NavController
             label = { Text("Username") },
             modifier = Modifier
                 .align(alignment = Alignment.TopStart)
-                .offset(x = 120.dp,
-                    y = 312.dp)
+                .offset(
+                    x = 120.dp,
+                    y = 312.dp
+                )
                 .requiredWidth(width = 120.dp)
                 .requiredHeight(height = 50.dp))
 
@@ -114,9 +120,9 @@ fun ProfilePage(profileViewModel: ProfileViewModel, navController: NavController
 }
 
 
-/*
+
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun ProfilePagePreview() {
-    ProfilePage(profilePageViewModel = ProfileViewModel())
-}*/
+    ProfilePage(ProfileViewModel(), rememberNavController())
+}

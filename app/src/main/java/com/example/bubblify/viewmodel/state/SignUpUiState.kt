@@ -5,6 +5,6 @@ data class SignUpUiState(
     val password: String = "",
     val repeatPassword: String = "",
     val isLoading: Boolean = false,
-    val isSuccess: String? = null,
-    val isError: String? = null
+    val isSuccess: Boolean = false,
+    val error: String? = null
 )
