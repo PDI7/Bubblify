@@ -8,7 +8,8 @@ import kotlinx.coroutines.tasks.await
 
 class StorageService
 @Inject
-constructor(private val firestore: FirebaseFirestore, private val auth: AccountService) {
+constructor(private val firestore: FirebaseFirestore,
+            private val auth: AccountService) {
 
     suspend fun getGroup(groupId: String): Group? =
         firestore.collection(Group_COLLECTION).document(groupId).get().await().toObject()

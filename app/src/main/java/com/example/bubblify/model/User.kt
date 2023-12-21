@@ -2,7 +2,7 @@ package com.example.bubblify.model
 
 data class User(
     val id: Int,
-    val uid: String,
+    val uuid: String,
     val brand: String,
     val name: String,
     val style: String,

@@ -11,20 +11,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.common.EmailField
 import com.example.bubblify.common.PasswordField
 import com.example.bubblify.common.PrimaryButton
+import com.example.bubblify.common.RepeatPasswordField
 import com.example.bubblify.common.SecondaryButton
 import com.example.bubblify.common.basicButton
 import com.example.bubblify.common.fieldModifier
-import com.example.bubblify.viewmodel.LoginViewModel
+import com.example.bubblify.viewmodel.SignUpViewModel
 
 @Composable
-fun LoginPage(viewModel: LoginViewModel, navController: NavController) {
-
+fun SignUpPage(
+    navController: NavController,
+    viewModel: SignUpViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState
 
     val fieldModifier = Modifier.fieldModifier()
@@ -37,25 +39,24 @@ fun LoginPage(viewModel: LoginViewModel, navController: NavController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Login")
+        Text(text = "Sign Up")
 
         EmailField(uiState.email, viewModel::onEmailChange, fieldModifier)
 
         PasswordField(uiState.password, viewModel::onPasswordChange, fieldModifier)
 
-        PrimaryButton(text = "Login", modifier = Modifier.basicButton()) {
-            viewModel.onLogInClick()
+        RepeatPasswordField(
+            uiState.repeatPassword,
+            viewModel::onRepeatPasswordChange,
+            fieldModifier
+        )
+
+        PrimaryButton(text = "Create Account", modifier = Modifier.basicButton()) {
+            viewModel.onSignUpClick()
         }
 
-        SecondaryButton(text = "Sign up", modifier = Modifier.basicButton()) {
-            navController.navigate("signUp")
+        SecondaryButton(text = "Sign In", modifier = Modifier.basicButton()) {
+            navController.navigate("login")
         }
     }
-}
-
-
-@Preview(widthDp = 360, heightDp = 640)
-@Composable
-private fun LoginScreenPreview() {
-    LoginPage(viewModel = LoginViewModel(), navController = rememberNavController())
 }
