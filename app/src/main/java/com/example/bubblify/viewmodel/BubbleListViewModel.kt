@@ -2,6 +2,5 @@ package com.example.bubblify.viewmodel
 
 import androidx.lifecycle.ViewModel
 
-class ProfilePageViewModel : ViewModel() {
-
+class BubbleListViewModel : ViewModel() {
 }
