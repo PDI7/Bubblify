@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bubblify.common.isValidEmail
 import com.example.bubblify.common.isValidPassword
+import com.example.bubblify.common.isValidUsername
 import com.example.bubblify.common.passwordMatches
 import com.example.bubblify.model.Resource
 import com.example.bubblify.model.User
@@ -63,30 +64,39 @@ constructor(
 
     fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
         uiState.value = uiState.value.copy(emailValidation = "")
+        uiState.value = uiState.value.copy(usernameValidation = "")
         uiState.value = uiState.value.copy(passwordValidation = "")
         uiState.value = uiState.value.copy(repeatPasswordValidation = "")
-
+        var isValid = true
 
         if (!email.isValidEmail()) {
             uiState.value = uiState.value.copy(emailValidation = "The email has an Invalid format.")
-            return
+            isValid = false
+        }
+
+        if (!username.isValidUsername()) {
+            uiState.value = uiState.value.copy(
+                usernameValidation = "The username must be between 3 and 10 characters long."
+            )
+            isValid = false
         }
 
         if (!password.isValidPassword()) {
             uiState.value =
-                uiState.value.copy(passwordValidation =
-                "The password must have at least 6 characters and contain a number, small and big letter."
+                uiState.value.copy(
+                    passwordValidation =
+                    "The password must have at least 6 characters and contain a number, small and big letter."
                 )
-            return
+            isValid = false
         }
 
         if (!password.passwordMatches(uiState.value.repeatPassword)) {
-            uiState.value = uiState.value.copy(repeatPasswordValidation = "The passwords don't match!")
-            return
+            uiState.value =
+                uiState.value.copy(repeatPasswordValidation = "The passwords don't match!")
+            isValid = false
         }
 
-        registerUser(openAndPopUp = openAndPopUp)
-
+        if (isValid) registerUser(openAndPopUp = openAndPopUp)
     }
 
 

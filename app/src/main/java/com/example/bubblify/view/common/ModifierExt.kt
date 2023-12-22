@@ -18,3 +18,8 @@ fun Modifier.fieldModifier(): Modifier {
         .fillMaxWidth()
         .padding(16.dp, 4.dp)
 }
+
+fun Modifier.titleModifier(): Modifier {
+    return this
+        .padding(16.dp, 4.dp)
+}

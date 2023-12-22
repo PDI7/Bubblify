@@ -13,7 +13,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun PrimaryButton(text: String, modifier: Modifier, action: () -> Unit) {
+fun PrimaryButton(text: String, modifier: Modifier = Modifier, action: () -> Unit) {
     OutlinedButton(
         onClick = action,
         colors = ButtonDefaults.buttonColors(containerColor = Color.Blue),
@@ -30,7 +30,7 @@ fun PrimaryButton(text: String, modifier: Modifier, action: () -> Unit) {
 }
 
 @Composable
-fun SecondaryButton(text: String, modifier: Modifier, action: () -> Unit) {
+fun SecondaryButton(text: String, modifier: Modifier = Modifier, action: () -> Unit) {
     OutlinedButton(
         onClick = action,
         border = BorderStroke(2.dp, Color.LightGray),
