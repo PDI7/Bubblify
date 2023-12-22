@@ -5,14 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,9 +13,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.bubblify.view.common.BackNavigationWithNotificationIcon
+import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.BubbleListViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavController) {
 
@@ -33,24 +27,9 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
             .background(color = Color.White)
     ) {
 
-        CenterAlignedTopAppBar(
-            title = { Text("Groups", maxLines = 1) },
-            navigationIcon = {
-                IconButton(onClick = { /* do something */ }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "get back"
-                    )
-                }
-            },
-            actions = {
-                IconButton(onClick = { /* do something */ }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Notifications,
-                        contentDescription = "Notification"
-                    )
-                }
-            }
+        BackNavigationWithNotificationIcon(
+            onClickBack = { /* do something */ },
+            onClickNotification = { /* do something */ }
         )
 
         FilledTonalButton(
@@ -63,8 +42,8 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
                 )
                 .requiredWidth(width = 285.dp)
                 .requiredHeight(height = 60.dp)
-            ) {
-                Text("Erasmus Friends")
+        ) {
+            Text("Erasmus Friends")
         }
         FilledTonalButton(
             onClick = { /*TODO*/ },
@@ -76,8 +55,8 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
                 )
                 .requiredWidth(width = 285.dp)
                 .requiredHeight(height = 60.dp)
-            ) {
-                Text("Family Chausson")
+        ) {
+            Text("Family Chausson")
         }
         FilledTonalButton(
             onClick = { /*TODO*/ },
@@ -106,7 +85,7 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
             Text("+")
         }
 
-        NavBarUI()
+        NavigationBar()
 
     }
 }

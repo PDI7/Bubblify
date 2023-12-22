@@ -1,4 +1,4 @@
-package com.example.bubblify.common
+package com.example.bubblify.view.common
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.requiredHeight

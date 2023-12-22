@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -39,11 +38,19 @@ constructor(
 
     private val email
         get() = uiState.value.email
+
+    private val username
+        get() = uiState.value.username
+
     private val password
         get() = uiState.value.password
 
     fun onEmailChange(newValue: String) {
         uiState.value = uiState.value.copy(email = newValue)
+    }
+
+    fun onUsernameChange(newValue: String) {
+        uiState.value = uiState.value.copy(username = newValue)
     }
 
     fun onPasswordChange(newValue: String) {
@@ -55,55 +62,63 @@ constructor(
     }
 
     fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
+        uiState.value = uiState.value.copy(emailValidation = "")
+        uiState.value = uiState.value.copy(passwordValidation = "")
+        uiState.value = uiState.value.copy(repeatPasswordValidation = "")
+
+
         if (!email.isValidEmail()) {
-            Toast.makeText(application, "TODO invalid Email", Toast.LENGTH_SHORT).show()
+            uiState.value = uiState.value.copy(emailValidation = "The email has an Invalid format.")
             return
         }
 
         if (!password.isValidPassword()) {
-            Toast.makeText(application, "TODO invalid Password", Toast.LENGTH_SHORT).show()
+            uiState.value =
+                uiState.value.copy(passwordValidation =
+                "The password must have at least 6 characters and contain a number, small and big letter."
+                )
             return
         }
 
         if (!password.passwordMatches(uiState.value.repeatPassword)) {
-            Toast.makeText(application, "TODO invalid repeatPassword", Toast.LENGTH_SHORT).show()
+            uiState.value = uiState.value.copy(repeatPasswordValidation = "The passwords don't match!")
             return
         }
 
-        System.out.println("Email: $email")
-        registerUser(openAndPopUp = openAndPopUp, email = email, password = password)
+        registerUser(openAndPopUp = openAndPopUp)
 
     }
 
 
     private fun registerUser(
-        openAndPopUp: (String, String) -> Unit,
-        email: String,
-        password: String
+        openAndPopUp: (String, String) -> Unit
     ) = viewModelScope.launch {
         accountService.registerUser(email = email, password = password).collectLatest { result ->
             when (result) {
                 is Resource.Loading -> {
-                    _registerState.update { it.copy(isLoading = true) }
+                    uiState.value = uiState.value.copy(isLoading = true)
                 }
 
                 is Resource.Success -> {
-                    _registerState.update { it.copy(isSuccess = true) }
-                    linkAccount(openAndPopUp = openAndPopUp, email = email)
+                    uiState.value = uiState.value.copy(isLoading = false)
+                    uiState.value = uiState.value.copy(isSuccess = true)
+                    linkAccount(openAndPopUp = openAndPopUp)
                 }
 
                 is Resource.Error -> {
-                    _registerState.update { it.copy(error = result.message) }
+                    uiState.value = uiState.value.copy(isLoading = false)
+                    uiState.value = uiState.value.copy(error = result.message)
                 }
             }
         }
     }
 
-    private fun linkAccount(openAndPopUp: (String, String) -> Unit, email: String) =
+    private fun linkAccount(openAndPopUp: (String, String) -> Unit) =
         viewModelScope.launch {
             val user = User(
-                id = accountService.currentUserId,
-                email = email
+                uuid = accountService.currentUserId,
+                username = username,
+                email = email,
             )
 
             storageService.createUser(user)

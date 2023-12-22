@@ -1,4 +1,4 @@
-package com.example.bubblify.common
+package com.example.bubblify.view.common
 
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -28,24 +28,29 @@ fun BasicField(
     label: String,
     value: String,
     onNewValue: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    errorMessage: String = ""
 ) {
     OutlinedTextField(
+        label = { Text(label) },
+        isError = errorMessage.isNotEmpty(),
+        supportingText = { if (errorMessage.isNotEmpty()) Text(errorMessage) },
         singleLine = true,
         modifier = modifier,
         value = value,
-        onValueChange = { onNewValue(it) },
-        label = { Text(label) }
+        onValueChange = { onNewValue(it) }
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier) {
+fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier, errorMessage: String = "") {
     OutlinedTextField(
         singleLine = true,
         modifier = modifier,
         value = value,
+        isError = errorMessage.isNotEmpty(),
+        supportingText = { if (errorMessage.isNotEmpty()) Text(errorMessage) },
         label = { Text("Email") },
         onValueChange = { onNewValue(it) },
         colors = TextFieldDefaults.textFieldColors(
@@ -57,17 +62,18 @@ fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier =
 }
 
 @Composable
-fun PasswordField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier) {
-    PasswordField(value, "Password", onNewValue, modifier)
+fun PasswordField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier, errorMessage: String = "") {
+    PasswordField(value, "Password", onNewValue, modifier, errorMessage)
 }
 
 @Composable
 fun RepeatPasswordField(
     value: String,
     onNewValue: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    errorMessage: String = ""
 ) {
-    PasswordField(value, "Repeat Password", onNewValue, modifier)
+    PasswordField(value, "Repeat Password", onNewValue, modifier, errorMessage)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,7 +82,8 @@ private fun PasswordField(
     value: String,
     label: String,
     onNewValue: (String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    errorMessage: String = ""
 ) {
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
@@ -85,6 +92,8 @@ private fun PasswordField(
         value = value,
         label = { Text(label) },
         placeholder = { Text(text = "Enter password here") },
+        isError = errorMessage.isNotEmpty(),
+        supportingText = { if (errorMessage.isNotEmpty()) Text(errorMessage) },
         onValueChange = { onNewValue(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         colors = TextFieldDefaults.textFieldColors(
