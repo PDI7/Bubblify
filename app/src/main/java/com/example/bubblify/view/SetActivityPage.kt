@@ -1,6 +1,4 @@
 package com.example.bubblify.view
-
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.example.bubblify.viewmodel.SetActivityViewModel
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.ui.draw.clip
+import androidx.navigation.NavController
 
 @Composable
 fun NavBarUI() {
@@ -69,7 +68,7 @@ fun NavBarUI() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SetActivityPage(modifier: Modifier = Modifier, setActivityViewModel: SetActivityViewModel) {
+fun SetActivityPage(setActivityViewModel: SetActivityViewModel, navController: NavController) {
 
     Box(
         Modifier
@@ -161,9 +160,11 @@ fun SetActivityPage(modifier: Modifier = Modifier, setActivityViewModel: SetActi
     }
 }
 
+/*
 
 @Preview(widthDp = 360, heightDp = 640)
 @Composable
 fun SetActivityPreview() {
-    SetActivityPage(modifier = Modifier, setActivityViewModel = SetActivityViewModel())
+    SetActivityPage(setActivityViewModel = SetActivityViewModel())
 }
+*/
