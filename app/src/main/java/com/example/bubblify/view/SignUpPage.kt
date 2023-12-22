@@ -11,16 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.example.bubblify.MainState
-import com.example.bubblify.common.EmailField
-import com.example.bubblify.common.PasswordField
-import com.example.bubblify.common.PrimaryButton
-import com.example.bubblify.common.RepeatPasswordField
-import com.example.bubblify.common.SecondaryButton
-import com.example.bubblify.common.basicButton
-import com.example.bubblify.common.fieldModifier
+import com.example.bubblify.view.common.BasicField
+import com.example.bubblify.view.common.EmailField
+import com.example.bubblify.view.common.PasswordField
+import com.example.bubblify.view.common.PrimaryButton
+import com.example.bubblify.view.common.RepeatPasswordField
+import com.example.bubblify.view.common.SecondaryButton
+import com.example.bubblify.view.common.basicButton
+import com.example.bubblify.view.common.fieldModifier
 import com.example.bubblify.viewmodel.SignUpViewModel
 
 @Composable
@@ -42,18 +43,43 @@ fun SignUpPage(
     ) {
         Text(text = "Sign Up")
 
-        EmailField(uiState.email, viewModel::onEmailChange, fieldModifier)
+        EmailField(
+            uiState.email,
+            viewModel::onEmailChange,
+            fieldModifier,
+            errorMessage = uiState.emailValidation
+        )
 
-        PasswordField(uiState.password, viewModel::onPasswordChange, fieldModifier)
+        BasicField(
+            "Username",
+            uiState.username,
+            viewModel::onUsernameChange,
+            fieldModifier,
+        )
+
+        PasswordField(
+            uiState.password,
+            viewModel::onPasswordChange,
+            fieldModifier,
+            uiState.passwordValidation
+        )
 
         RepeatPasswordField(
             uiState.repeatPassword,
             viewModel::onRepeatPasswordChange,
-            fieldModifier
+            fieldModifier,
+            uiState.repeatPasswordValidation
         )
 
+        if (uiState.error != null) Text(text = uiState.error!!, color = Color.Red)
+
         PrimaryButton(text = "Create Account", modifier = Modifier.basicButton()) {
-            viewModel.onSignUpClick(openAndPopUp = { route, popUp -> mainState.navigateAndPopUp(route, popUp) })
+            viewModel.onSignUpClick(openAndPopUp = { route, popUp ->
+                mainState.navigateAndPopUp(
+                    route,
+                    popUp
+                )
+            })
         }
 
         SecondaryButton(text = "Sign In", modifier = Modifier.basicButton()) {

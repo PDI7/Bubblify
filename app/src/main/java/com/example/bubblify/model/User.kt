@@ -1,7 +1,8 @@
 package com.example.bubblify.model
 
 data class User(
-    val id: String,
+    val uuid: String,
+    val username: String,
     val email: String,
-    val userGroups: List<UserGroup> = emptyList()
+    var userGroups: List<UserGroup> = emptyList()
 )
