@@ -20,8 +20,10 @@ import com.example.bubblify.view.common.PasswordField
 import com.example.bubblify.view.common.PrimaryButton
 import com.example.bubblify.view.common.RepeatPasswordField
 import com.example.bubblify.view.common.SecondaryButton
+import com.example.bubblify.view.common.Title
 import com.example.bubblify.view.common.basicButton
 import com.example.bubblify.view.common.fieldModifier
+import com.example.bubblify.view.common.titleModifier
 import com.example.bubblify.viewmodel.SignUpViewModel
 
 @Composable
@@ -41,7 +43,7 @@ fun SignUpPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Sign Up")
+        Title(text = "Sign Up", Modifier.titleModifier())
 
         EmailField(
             uiState.email,
@@ -55,6 +57,7 @@ fun SignUpPage(
             uiState.username,
             viewModel::onUsernameChange,
             fieldModifier,
+            uiState.usernameValidation
         )
 
         PasswordField(

@@ -18,8 +18,10 @@ import com.example.bubblify.view.common.EmailField
 import com.example.bubblify.view.common.PasswordField
 import com.example.bubblify.view.common.PrimaryButton
 import com.example.bubblify.view.common.SecondaryButton
+import com.example.bubblify.view.common.Title
 import com.example.bubblify.view.common.basicButton
 import com.example.bubblify.view.common.fieldModifier
+import com.example.bubblify.view.common.titleModifier
 import com.example.bubblify.viewmodel.LoginViewModel
 
 @Composable
@@ -40,7 +42,7 @@ fun LoginPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Login")
+        Title(text = "Login", Modifier.titleModifier())
 
         EmailField(uiState.email, viewModel::onEmailChange, fieldModifier)
 
