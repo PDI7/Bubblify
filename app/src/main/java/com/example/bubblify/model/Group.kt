@@ -8,4 +8,7 @@ data class Group(
     val color: Long,
     val activities: List<Activity> = emptyList(),
     val userGroups: List<UserGroup> = emptyList()
-)
+){
+    // Constructor by default
+    constructor() : this("", "", 0xff000000)
+}
