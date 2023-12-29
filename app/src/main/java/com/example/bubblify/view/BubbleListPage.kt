@@ -1,14 +1,11 @@
 package com.example.bubblify.view
 
-import android.graphics.Color.parseColor
-import androidx.annotation.ColorLong
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -25,9 +22,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.bubblify.model.Group
+import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.BubbleListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,14 +49,6 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
 
         CenterAlignedTopAppBar(
             title = { Text("Groups", maxLines = 1) },
-            navigationIcon = {
-                IconButton(onClick = { /* do something */ }) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = "get back"
-                    )
-                }
-            },
             actions = {
                 IconButton(onClick = { /* do something */ }) {
                     Icon(
@@ -78,6 +67,7 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
             groups!!.forEach { group ->
                 GroupItem(
                     group = group,
+                    navController = navController,
                     modifier = Modifier
                         .align(alignment = Alignment.TopStart)
                         .offset(
@@ -101,15 +91,15 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
                 Text("+")
             }
         }
-        NavBarUI()
+        NavigationBar()
     }
 }
 
 // Group Button
 @Composable
-fun GroupItem(group: Group, modifier: Modifier = Modifier) {
+fun GroupItem(group: Group, modifier: Modifier = Modifier, navController: NavController) {
     FilledTonalButton(
-        onClick = { /*TODO*/ },
+        onClick = { navController.navigate("bubbleList") },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
         modifier = modifier
             .requiredWidth(width = 285.dp)
