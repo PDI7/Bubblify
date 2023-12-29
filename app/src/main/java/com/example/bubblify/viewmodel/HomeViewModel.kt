@@ -1,4 +1,4 @@
-package com.example.bubblify.viewmodel;
+package com.example.bubblify.viewmodel
 
 import android.app.Application
 import android.util.Log
@@ -26,7 +26,17 @@ constructor(
                 var groups = storageService.getGroups()
                 Log.d("beforeCreation", groups?.size.toString())
 
-                val group = Group( "test", 4278223719)
+                var groupName = "New Group"
+                var count = 0
+
+                // keep incrementing the count until a unique name is available
+                while (groups!!.any { it.name == groupName }) {
+                    count++
+                    groupName = "New Group ($count)"
+                }
+
+                val group = Group(groupName, 4294902000)
+                Log.d("name", group.name)
                 val groupCreated = storageService.createGroup(group)
 
                 Log.d("groupCreated", groupCreated?.get()?.await().toString())
