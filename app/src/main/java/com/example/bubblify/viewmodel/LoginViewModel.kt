@@ -25,9 +25,6 @@ constructor(
     private val accountService: AccountService
 ) : AndroidViewModel(application = application) {
 
-    private var _loginState = MutableStateFlow(value = LoginUiState())
-    val loginState: StateFlow<LoginUiState> = _loginState.asStateFlow()
-
     var uiState = mutableStateOf(LoginUiState())
         private set
 
@@ -56,17 +53,19 @@ constructor(
         accountService.loginUser(email = email, password = password).collectLatest { result ->
             when (result) {
                 is Resource.Loading -> {
-                    _loginState.update { it.copy(isLoading = true) }
+                    uiState.value = uiState.value.copy(isLoading = true)
                 }
 
                 is Resource.Success -> {
-                    _loginState.update { it.copy(isSuccess = true) }
+                    uiState.value = uiState.value.copy(isLoading = false)
+                    uiState.value = uiState.value.copy(isSuccess = true)
                     openAndPopUp("profile", "login")
                 }
 
                 is Resource.Error -> {
-                    _loginState.update { it.copy(error = result.message) }
-                    Toast.makeText(application, "TODO invalid Login", Toast.LENGTH_SHORT).show()
+                    uiState.value = uiState.value.copy(isLoading = false)
+                    uiState.value = uiState.value.copy(error = result.message)
+                    Toast.makeText(application, "Invalid Login", Toast.LENGTH_SHORT).show()
                 }
             }
         }

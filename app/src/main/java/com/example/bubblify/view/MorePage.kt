@@ -22,11 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.bubblify.viewmodel.LoginViewModel
+import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.MoreViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +74,7 @@ fun MorePage(moreViewModel: MoreViewModel, navController: NavController) {
                     y = 80.dp))
 
 
-        NavBarUI()
+        NavigationBar()
     }
 }
 

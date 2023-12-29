@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.R
+import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.ProfileViewModel
 
 
@@ -113,7 +114,7 @@ fun ProfilePage(profileViewModel: ProfileViewModel, navController: NavController
                 .requiredHeight(height = 50.dp))
 
         //navigation bar
-        NavBarUI()
+        NavigationBar()
 
     }
 
