@@ -26,7 +26,7 @@ constructor(
                 var groups = storageService.getGroups()
                 Log.d("beforeCreation", groups?.size.toString())
 
-                val group = Group( "test", "4278223719")
+                val group = Group( "test", 4278223719)
                 val groupCreated = storageService.createGroup(group)
 
                 Log.d("groupCreated", groupCreated?.get()?.await().toString())

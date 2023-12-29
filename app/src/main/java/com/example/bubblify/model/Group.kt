@@ -2,7 +2,7 @@ package com.example.bubblify.model
 
 data class Group(
     val name: String,
-    val color: String,// Datatype TBD
+    val color: Long,// Datatype TBD
 ) {
-    constructor() : this("", "")  // Explicit no-argument constructor
+    constructor() : this("", 0L)  // Explicit no-argument constructor
 }
