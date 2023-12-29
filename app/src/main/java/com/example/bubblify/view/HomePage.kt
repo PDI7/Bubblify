@@ -13,16 +13,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.bubblify.MainState
 import com.example.bubblify.viewmodel.HomeViewModel
 
 @Composable
-fun HomePage(viewModel: HomeViewModel, navController: NavController) {
+fun HomePage(
+    mainState: MainState,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable { /* navController.navigate("user") */ },
+            .clickable { viewModel.createGroup() },
         elevation = CardDefaults.cardElevation(defaultElevation = 16.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -30,7 +35,7 @@ fun HomePage(viewModel: HomeViewModel, navController: NavController) {
         border = BorderStroke(0.5.dp, Color.Black),
     ) {
         Text(
-            text = "Erasmus Friends",
+            text = "+",
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),

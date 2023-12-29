@@ -5,13 +5,21 @@ import com.example.bubblify.model.User
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
-import javax.inject.Inject
+import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 class StorageService
 @Inject
 constructor(private val firestore: FirebaseFirestore,
             private val auth: AccountService) {
+
+    suspend fun getGroups(): List<Group>? =
+        firestore.collection(Group_COLLECTION).get().await().toObjects()
+
+    suspend fun createGroup(group: Group): DocumentReference? =
+        firestore.collection(Group_COLLECTION).add(group).await()
+
 
     suspend fun getGroup(groupId: String): Group? =
         firestore.collection(Group_COLLECTION).document(groupId).get().await().toObject()
@@ -21,9 +29,9 @@ constructor(private val firestore: FirebaseFirestore,
 //            firestore.collection(Group_COLLECTION).add(groupWithUserId).await().id
 //        }
 
-    suspend fun update(group: Group): Unit {
+    /*suspend fun update(group: Group): Unit {
             firestore.collection(Group_COLLECTION).document(group.id).set(group).await()
-        }
+        }*/
 
     suspend fun delete(groupId: String) {
         firestore.collection(Group_COLLECTION).document(groupId).delete().await()
