@@ -7,6 +7,7 @@ import com.example.bubblify.model.User
 import com.example.bubblify.model.UserGroup
 import com.google.firebase.firestore.DocumentReference
 import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.QuerySnapshot
@@ -37,10 +38,13 @@ constructor(private val firestore: FirebaseFirestore,
         return firestore.collection(GROUP_COLLECTION).get().await().toObjects()
     }
 
-    suspend fun  getAllGroupsFromUser(userId: String): List<Group> {
-        val userReference = firestore.collection(USER_COLLECTION).document(userId)
+    // Get all the groups from the current User
+    suspend fun  getAllGroupsFromCurrentUser(): List<Group> {
+        // Get the current user ID
+        val userReference = auth.currentUserId
+        // Fetch all the groups where the user are
         val userGroups = firestore.collection(USER_GROUP_COLLECTION).whereEqualTo(USER_ID_FIELD, userReference).get().await()
-
+        // Fetch all the groups where the reference (groupId) corresponding
         val groups = userGroups.documents
             .filter { it.exists() }
             .mapNotNull { document ->
@@ -48,7 +52,7 @@ constructor(private val firestore: FirebaseFirestore,
                 groupReference!!.get().await().toObject(Group::class.java)
             }
             .toList()
-        Log.d("TRACKER", groups.toString())
+        // Return the list
         return groups
     }
 
