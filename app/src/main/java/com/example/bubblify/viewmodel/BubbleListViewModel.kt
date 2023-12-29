@@ -30,8 +30,10 @@ constructor(
     fun fetchGroups() {
         viewModelScope.launch {
             try {
-                // Get all groups from the database
-                val value = storageService.getAllGroups()
+                // Get all groups from an user
+                // User 1 : MmNmULv9ubAupf7lxbnq
+                // User 2 : A1OIjaLkuRNGp1vrBJQ0
+                val value = storageService.getAllGroupsFromUser("A1OIjaLkuRNGp1vrBJQ0")
                 _groups.value = value
             } catch (e: Exception){
                 // If there is an error, log it
