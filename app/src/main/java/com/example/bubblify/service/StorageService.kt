@@ -54,10 +54,9 @@ constructor(private val firestore: FirebaseFirestore,
 
     // ================= Collections ID's ===================== //
     companion object {
-        private const val USER_ID_FIELD = "userId"
         private const val GROUP_COLLECTION = "Groups"
         private const val USER_COLLECTION = "Users"
-        private const val SAVE_Group_TRACE = "saveGroup"
-        private const val UPDATE_Group_TRACE = "updateGroup"
+        private const val USER_GROUP_COLLECTION = "UserGroups"
+        private const val ACTIVITY_COLLECTION = "Activities"
     }
 }
