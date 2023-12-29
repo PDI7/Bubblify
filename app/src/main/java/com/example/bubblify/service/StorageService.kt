@@ -36,8 +36,8 @@ constructor(private val firestore: FirebaseFirestore,
         return firestore.collection(GROUP_COLLECTION).get().await().toObjects()
     }
 
-    suspend fun update(group: Group): Unit {
-        firestore.collection(GROUP_COLLECTION).document(group.id).set(group).await()
+    suspend fun update(groupId: String, group: Group): Unit {
+        firestore.collection(GROUP_COLLECTION).document(groupId).set(group).await()
     }
 
     suspend fun delete(groupId: String) {
