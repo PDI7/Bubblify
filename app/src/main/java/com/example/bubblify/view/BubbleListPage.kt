@@ -78,7 +78,7 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
             }
             // Display an empty button to add a new group
             FilledTonalButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("bubbleMain") },
                 modifier = Modifier
                     .align(alignment = Alignment.TopStart)
                     .offset(
