@@ -2,6 +2,7 @@ package com.example.bubblify.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
@@ -26,10 +27,11 @@ import androidx.navigation.NavController
 import com.example.bubblify.model.Group
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.BubbleListViewModel
+import com.example.bubblify.viewmodel.SharedBubbleListBubbleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavController) {
+fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavController, sharedBubbleListBubbleViewModel: SharedBubbleListBubbleViewModel) {
 
     // Add the listener
     val groups by bubbleListViewModel.groups.observeAsState(null)
@@ -42,9 +44,7 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
 
     Box(
         modifier = Modifier
-            .requiredWidth(width = 360.dp)
-            .requiredHeight(height = 640.dp)
-            .background(color = Color.White)
+            .fillMaxSize()
     ) {
 
         CenterAlignedTopAppBar(
@@ -66,6 +66,7 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
             // Display the list of credit cards
             groups!!.forEach { group ->
                 GroupItem(
+                    sharedBubbleListBubbleViewModel = sharedBubbleListBubbleViewModel,
                     group = group,
                     navController = navController,
                     modifier = Modifier
@@ -78,7 +79,7 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
             }
             // Display an empty button to add a new group
             FilledTonalButton(
-                onClick = { navController.navigate("bubbleMain") },
+                onClick = { navController.navigate("bubbleList") },
                 modifier = Modifier
                     .align(alignment = Alignment.TopStart)
                     .offset(
@@ -91,15 +92,18 @@ fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavC
                 Text("+")
             }
         }
-        NavigationBar()
+        NavigationBar(navController = navController)
     }
 }
 
 // Group Button
 @Composable
-fun GroupItem(group: Group, modifier: Modifier = Modifier, navController: NavController) {
+fun GroupItem(group: Group, modifier: Modifier = Modifier, navController: NavController, sharedBubbleListBubbleViewModel: SharedBubbleListBubbleViewModel) {
     FilledTonalButton(
-        onClick = { navController.navigate("bubbleList") },
+        onClick = {
+            sharedBubbleListBubbleViewModel.addGroup(group)
+            navController.navigate("bubbleMain")
+        },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
         modifier = modifier
             .requiredWidth(width = 285.dp)

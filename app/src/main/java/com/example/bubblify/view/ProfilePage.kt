@@ -45,9 +45,7 @@ fun ProfilePage(profileViewModel: ProfileViewModel, navController: NavController
     //screen
     Box(
         Modifier
-            .requiredWidth(width = 360.dp)
-            .requiredHeight(height = 640.dp)
-            .background(color = Color.White)
+            .fillMaxSize()
     ) {
 
         //top bar
@@ -114,7 +112,7 @@ fun ProfilePage(profileViewModel: ProfileViewModel, navController: NavController
                 .requiredHeight(height = 50.dp))
 
         //navigation bar
-        NavigationBar()
+        NavigationBar(navController = navController)
 
     }
 
