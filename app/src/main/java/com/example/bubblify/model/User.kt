@@ -4,5 +4,5 @@ data class User(
     val uuid: String,
     val username: String,
     val email: String,
-    var userGroups: List<UserGroup> = emptyList()
+    var userGroupIds: List<String> = emptyList()
 )

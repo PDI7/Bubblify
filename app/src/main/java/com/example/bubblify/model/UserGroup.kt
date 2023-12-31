@@ -1,9 +1,8 @@
 package com.example.bubblify.model
 
 data class UserGroup (
-    val id: String,
-    val user: User,
-    val group: Group,
-    val activity: Activity,
+    val userId: String,
+    val groupId: String,
+    val activityId: String,
     val state: UserGroupState,
 )
