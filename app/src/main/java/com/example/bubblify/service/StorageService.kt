@@ -21,17 +21,14 @@ class StorageService
 constructor(private val firestore: FirebaseFirestore,
             private val auth: AccountService) {
 
-    suspend fun getGroup(groupId: String): Group? =
-        firestore.collection(GROUP_COLLECTION).document(groupId).get().await().toObject()
 
-//    suspend fun save(group: Group): String {
-//            val groupWithUserId = group.copy( = auth.currentUserId)
-//            firestore.collection(Group_COLLECTION).add(groupWithUserId).await().id
-//        }
 
     //===============================================================//
     //======================== GROUP METHODS ========================//
     //===============================================================//
+
+    suspend fun getGroup(groupId: String): Group? =
+        firestore.collection(GROUP_COLLECTION).document(groupId).get().await().toObject()
 
     // Get all groups from the database
     suspend fun getAllGroups(): List<Group> {
@@ -48,7 +45,7 @@ constructor(private val firestore: FirebaseFirestore,
         val groups = userGroups.documents
             .filter { it.exists() }
             .mapNotNull { document ->
-                val groupReference = document.getDocumentReference("groupId")
+                val groupReference = document.getDocumentReference(GROUP_ID_FIELD)
                 groupReference!!.get().await().toObject(Group::class.java)
             }
             .toList()
@@ -56,11 +53,11 @@ constructor(private val firestore: FirebaseFirestore,
         return groups
     }
 
-    suspend fun update(groupId: String, group: Group): Unit {
+    suspend fun updateGroup(groupId: String, group: Group): Unit {
         firestore.collection(GROUP_COLLECTION).document(groupId).set(group).await()
     }
 
-    suspend fun delete(groupId: String) {
+    suspend fun deleteGroup(groupId: String) {
         firestore.collection(GROUP_COLLECTION).document(groupId).delete().await()
     }
 
@@ -72,13 +69,16 @@ constructor(private val firestore: FirebaseFirestore,
     }
 
 
-    // ================= Collections ID's ===================== //
+    // ================= Constants ================================ //
     companion object {
+        //
         private const val USER_ID_FIELD = "userId"
+        private const val GROUP_ID_FIELD = "groupId"
+        // Collection/Documents Constants
         private const val USER_GROUP_COLLECTION = "UsersGroups"
-
         private const val GROUP_COLLECTION = "Groups"
         private const val USER_COLLECTION = "Users"
+        // Traces
         private const val SAVE_Group_TRACE = "saveGroup"
         private const val UPDATE_Group_TRACE = "updateGroup"
     }

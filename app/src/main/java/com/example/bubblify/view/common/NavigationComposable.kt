@@ -38,7 +38,7 @@ fun NavigationBar(navController : NavController) {
                 selected = selectedItem == 0,
                 onClick = {
                     selectedItem = 0
-                    navController.navigate("bubbleList")
+                    navController.navigate("home")
                 }
             )
             NavigationBarItem(

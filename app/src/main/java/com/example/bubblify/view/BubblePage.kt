@@ -83,7 +83,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 
         CenterAlignedTopAppBar(
             navigationIcon = {
-                IconButton(onClick = { navController.navigate("bubbleList") }) {
+                IconButton(onClick = { navController.navigate("home") }) {
                     Icon(
                         imageVector = Icons.Outlined.ArrowBack,
                         contentDescription = "ArrowBack"

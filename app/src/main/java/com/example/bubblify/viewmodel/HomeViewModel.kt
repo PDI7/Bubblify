@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bubblify.model.Group
 import com.example.bubblify.service.StorageService
@@ -14,7 +13,7 @@ import javax.inject.Inject
 import android.util.Log
 
 @HiltViewModel
-class BubbleListViewModel
+class HomeViewModel
 @Inject
 constructor(
     private val application: Application,
@@ -35,7 +34,7 @@ constructor(
                 _groups.value = value
             } catch (e: Exception){
                 // If there is an error, log it
-                Log.d("BubbleListViewModel", "fetchGroups: ${e.message}")
+                Log.d("HomeViewModel", "fetchGroups: ${e.message}")
             }
         }
     }

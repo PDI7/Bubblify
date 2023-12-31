@@ -59,7 +59,7 @@ constructor(
                 is Resource.Success -> {
                     uiState.value = uiState.value.copy(isLoading = false)
                     uiState.value = uiState.value.copy(isSuccess = true)
-                    openAndPopUp("bubbleList", "login")
+                    openAndPopUp("home", "login")
 
                 }
 

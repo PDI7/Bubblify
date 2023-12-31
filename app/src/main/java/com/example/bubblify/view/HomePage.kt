@@ -26,19 +26,19 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.bubblify.model.Group
 import com.example.bubblify.view.common.NavigationBar
-import com.example.bubblify.viewmodel.BubbleListViewModel
+import com.example.bubblify.viewmodel.HomeViewModel
 import com.example.bubblify.viewmodel.SharedBubbleListBubbleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BubbleListPage(bubbleListViewModel: BubbleListViewModel, navController: NavController, sharedBubbleListBubbleViewModel: SharedBubbleListBubbleViewModel) {
+fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedBubbleListBubbleViewModel: SharedBubbleListBubbleViewModel) {
 
     // Add the listener
-    val groups by bubbleListViewModel.groups.observeAsState(null)
+    val groups by homeViewModel.groups.observeAsState(null)
 
     // Get the data before starting the UI
     LaunchedEffect(Unit) {
-        bubbleListViewModel.fetchGroups()
+        homeViewModel.fetchGroups()
     }
 
 
