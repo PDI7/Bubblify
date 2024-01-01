@@ -19,7 +19,7 @@ import com.example.bubblify.viewmodel.BubbleViewModel
 import com.example.bubblify.viewmodel.MoreViewModel
 import com.example.bubblify.viewmodel.ProfileViewModel
 import com.example.bubblify.viewmodel.SetActivityViewModel
-import com.example.bubblify.viewmodel.SharedBubbleListBubbleViewModel
+import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
     private val setActivityViewModel: SetActivityViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
     private val bubbleViewModel: BubbleViewModel by viewModels()
-    private val sharedBubbleListBubbleViewModel: SharedBubbleListBubbleViewModel by viewModels()
+    private val sharedBubbleListBubbleViewModel: SharedHomeBubbleViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
             // Navigation Core
             val navController = rememberNavController()
             val mainState = MainState(navController)
-            NavHost(navController = navController, startDestination = "login") {
+            NavHost(navController = navController, startDestination = "home") {
                 composable("profile") { ProfilePage(profileViewModel, navController) }
                 composable("login") { LoginPage(mainState) }
                 composable("signUp") { SignUpPage(mainState) }

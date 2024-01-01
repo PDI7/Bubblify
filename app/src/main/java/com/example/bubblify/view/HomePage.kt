@@ -1,6 +1,5 @@
 package com.example.bubblify.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -27,11 +26,11 @@ import androidx.navigation.NavController
 import com.example.bubblify.model.Group
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.HomeViewModel
-import com.example.bubblify.viewmodel.SharedBubbleListBubbleViewModel
+import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedBubbleListBubbleViewModel: SharedBubbleListBubbleViewModel) {
+fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
 
     // Add the listener
     val groups by homeViewModel.groups.observeAsState(null)
@@ -66,7 +65,7 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedB
             // Display the list of credit cards
             groups!!.forEach { group ->
                 GroupItem(
-                    sharedBubbleListBubbleViewModel = sharedBubbleListBubbleViewModel,
+                    sharedHomeBubbleViewModel = sharedHomeBubbleViewModel,
                     group = group,
                     navController = navController,
                     modifier = Modifier
@@ -79,7 +78,7 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedB
             }
             // Display an empty button to add a new group
             FilledTonalButton(
-                onClick = { navController.navigate("bubbleList") },
+                onClick = { navController.navigate("home") },
                 modifier = Modifier
                     .align(alignment = Alignment.TopStart)
                     .offset(
@@ -98,10 +97,10 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedB
 
 // Group Button
 @Composable
-fun GroupItem(group: Group, modifier: Modifier = Modifier, navController: NavController, sharedBubbleListBubbleViewModel: SharedBubbleListBubbleViewModel) {
+fun GroupItem(group: Group, modifier: Modifier = Modifier, navController: NavController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
     FilledTonalButton(
         onClick = {
-            sharedBubbleListBubbleViewModel.addGroup(group)
+            sharedHomeBubbleViewModel.addGroup(group)
             navController.navigate("bubbleMain")
         },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
@@ -117,6 +116,6 @@ fun GroupItem(group: Group, modifier: Modifier = Modifier, navController: NavCon
 @Preview
 @Composable
 private fun LoginScreenPreview() {
-    BubbleListPage(bubbleListViewModel = BubbleListViewModel())
+    HomePage(HomeViewModel = HomeViewModel())
 }
 */
