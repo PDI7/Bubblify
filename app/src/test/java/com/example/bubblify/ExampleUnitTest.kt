@@ -3,9 +3,7 @@ package com.example.bubblify
 import com.example.bubblify.service.AccountService
 import com.example.bubblify.service.StorageService
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.test.runTest
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
