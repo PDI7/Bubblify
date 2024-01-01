@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.bubblify.view.AddMembersPage
 import com.example.bubblify.view.BubbleListPage
 import com.example.bubblify.view.LoginPage
 import com.example.bubblify.view.MorePage
@@ -38,7 +39,7 @@ class MainActivity : ComponentActivity() {
             // Navigation Core
             val navController = rememberNavController()
             val mainState = MainState(navController)
-            NavHost(navController = navController, startDestination = "login") {
+            NavHost(navController = navController, startDestination = "addMembers") {
                 composable("user") { UserPage(userViewModel, navController) }
                 composable("other") { OtherPage(otherViewModel, navController) }
                 composable("profile") { ProfilePage(profileViewModel, navController) }
@@ -47,6 +48,7 @@ class MainActivity : ComponentActivity() {
                 composable("more") { MorePage(moreViewModel, navController) }
                 composable("setActivity") { SetActivityPage(setActivityViewModel, navController) }
                 composable("bubbleList") { BubbleListPage(bubbleListViewModel, navController) }
+                composable("addMembers") { AddMembersPage(mainState) }
             }
         }
     }

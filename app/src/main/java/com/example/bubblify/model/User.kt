@@ -5,4 +5,6 @@ data class User(
     val username: String,
     val email: String,
     var userGroups: List<UserGroup> = emptyList()
-)
+) {
+    constructor() : this("", "", "")
+}

@@ -5,8 +5,9 @@ import com.example.bubblify.model.User
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
-import javax.inject.Inject
+import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await
+import javax.inject.Inject
 
 class StorageService
 @Inject
@@ -27,6 +28,20 @@ constructor(private val firestore: FirebaseFirestore,
 
     suspend fun delete(groupId: String) {
         firestore.collection(Group_COLLECTION).document(groupId).delete().await()
+    }
+
+    private suspend fun getUsers(): List<User>? =
+        firestore.collection(USER_COLLECTION).get().await().toObjects()
+
+    private fun filterUsers(users: List<User>, querySearch: String): List<User> {
+        return users.filter { user ->
+            user.username.contains(querySearch, ignoreCase = true)
+        }
+    }
+
+    suspend fun getUsersFromSearch(querySearch: String): List<User>?  {
+        val allUsers = getUsers() ?: return null
+        return filterUsers(allUsers, querySearch)
     }
 
     suspend fun createUser(user: User): DocumentReference? {
