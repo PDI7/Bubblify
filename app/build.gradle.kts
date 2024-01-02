@@ -114,5 +114,6 @@ dependencies {
     // ...with Kotlin.
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.50")
 
+    implementation("com.google.dagger:hilt-android:2.50")
 
 }
