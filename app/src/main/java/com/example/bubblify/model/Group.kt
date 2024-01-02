@@ -1,10 +1,6 @@
 package com.example.bubblify.model
 
 data class Group(
-    val name: String,
-    val color: Long,
-    val activityIds: List<String> = emptyList(),
-    val userGroupIds: List<String> = emptyList()
-) {
-    constructor() : this("", 0L)
-}
+    var name: String = "",
+    val color: Long = 0xff000000
+)

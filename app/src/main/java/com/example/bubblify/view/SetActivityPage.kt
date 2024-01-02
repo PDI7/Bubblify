@@ -117,7 +117,7 @@ fun SetActivityPage(setActivityViewModel: SetActivityViewModel, navController: N
 
         }
 
-        NavigationBar()
+        NavigationBar(navController = navController)
     }
 }
 

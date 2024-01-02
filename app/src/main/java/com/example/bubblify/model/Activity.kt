@@ -1,8 +1,7 @@
 package com.example.bubblify.model
 
-data class Activity (
-    val id: String,
+data class Activity(
     val name: String,
-    val group: Group,
-    val icon: String,// Datatype TBD
+    val groupId: String, // TODO CHANGE TO DocumentReference
+    val icon: ActivityIcon
 )

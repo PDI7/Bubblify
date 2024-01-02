@@ -24,6 +24,7 @@ constructor(
     private val _groups = MutableLiveData<List<Group>>()
     val groups: LiveData<List<Group>> = _groups
 
+
     // Fetch all groups from the database
     fun fetchGroups() {
         viewModelScope.launch {
@@ -69,3 +70,4 @@ constructor(
         }
     }
 }
+
