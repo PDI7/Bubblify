@@ -1,5 +1,6 @@
 package com.example.bubblify.view
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -100,7 +101,7 @@ fun AddMembersPage(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     // Display user details
-                    Text(text = user.username)
+                    Text(text = user.data.username)
 
 
                     // Add remove icon button
@@ -110,9 +111,7 @@ fun AddMembersPage(
                         tint = Color.Green,
                         modifier = Modifier
                             .clickable {
-                                // Handle remove action here
-                                // For example: remove the user from the list
-                                //searchResults.remove(user)
+                                Log.d("user.id", user.reference.id)
                             }
                             .padding(8.dp)
                     )

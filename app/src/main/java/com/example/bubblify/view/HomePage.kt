@@ -1,10 +1,12 @@
 package com.example.bubblify.view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ButtonDefaults
@@ -74,7 +76,7 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedB
                         .offset(
                             x = 38.dp,
                             y = 137.dp + (groups!!.indexOf(group) * 81).dp // Adapt the position to the number of groups
-                        )
+                        ),
                 )
             }
             // Display an empty button to add a new group
@@ -83,6 +85,7 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedB
                     homeViewModel.createGroup()
                     navController.navigate("home")
                           },
+                colors = ButtonDefaults.filledTonalButtonColors(Color.White),
                 modifier = Modifier
                     .align(alignment = Alignment.TopStart)
                     .offset(
@@ -90,7 +93,12 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedB
                         y = 137.dp + (groups!!.size * 81).dp // Adapt the position to the number of groups
                     )
                     .requiredWidth(width = 285.dp)
-                    .requiredHeight(height = 60.dp)
+                    .requiredHeight(height = 60.dp),
+                border = BorderStroke(1.dp, Color.Black),
+                elevation = ButtonDefaults.buttonElevation(
+                    defaultElevation = 10.dp
+                ),
+                shape = RoundedCornerShape(8.dp)
             ) {
                 Text("+")
             }
@@ -110,7 +118,12 @@ fun GroupItem(group: Group, modifier: Modifier = Modifier, navController: NavCon
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
         modifier = modifier
             .requiredWidth(width = 285.dp)
-            .requiredHeight(height = 60.dp)
+            .requiredHeight(height = 60.dp),
+        border = BorderStroke(1.dp, Color.Black),
+        elevation = ButtonDefaults.buttonElevation(
+            defaultElevation = 10.dp
+        ),
+        shape = RoundedCornerShape(8.dp)
     ) {
         Text(group.name, color = Color.White)
     }

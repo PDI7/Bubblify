@@ -83,6 +83,28 @@ constructor(
         return groups
     }
 
+    suspend fun getAllUsersFromGroup(groupReferenceString: String) : List<Reference<User>> {
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
+        val userGroups = firestore.collection(USER_GROUP_COLLECTION)
+            .whereEqualTo(GROUP_ID_FIELD, groupReference)
+            .whereEqualTo(USER_GROUP_STATE_FIELD, "ACCEPTED").get().await()
+
+        val users = userGroups.documents
+            .filter { it.exists() }
+            .mapNotNull { document ->
+                val userReference = document.getDocumentReference(USER_ID_FIELD)
+                val user = userReference!!.get().await().toObject<User>()
+                Reference(
+                    userReference,
+                    user!!
+                )
+            }
+            .toList()
+
+        return users
+    }
+
     suspend fun createGroup(group: Group): DocumentReference {
         val userReference = firestore.collection(USER_COLLECTION).document(auth.currentUserId)
         val groupReference = firestore.collection(GROUP_COLLECTION).add(group).await()
@@ -120,26 +142,40 @@ constructor(
             documentReference.toObject()!!
         )
     }
-    suspend fun getCurrentUser(): Reference<User> {
-        val documentReference =
-            firestore.collection(USER_COLLECTION).document(auth.currentUserId).get().await()
-        return Reference(
-            documentReference.id,
-            documentReference.toObject()!!
-        )
+
+    private suspend fun getUsers(groupReferenceString: String): List<Reference<User>> {
+        /* TODO: Check if user already in group and display only if not */
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
+        val userGroups = firestore.collection(USER_GROUP_COLLECTION)
+            .whereEqualTo(GROUP_ID_FIELD, groupReference)
+            .whereIn(USER_GROUP_STATE_FIELD, listOf("ACCEPTED", "INVITED")).get().await()
+
+        val users = firestore.collection(USER_COLLECTION).get().await()
+
+        val result = users.documents
+            .filter { it.exists() }
+            .mapNotNull { document ->
+                val userReference = document.reference
+                val user = userReference.get().await().toObject<User>()
+                Reference(
+                    userReference,
+                    user!!
+                )
+            }
+            .toList()
+
+        return result
     }
 
-    private suspend fun getUsers(): List<User>? =
-        firestore.collection(USER_COLLECTION).get().await().toObjects()
-
-    private fun filterUsers(users: List<User>, querySearch: String): List<User> {
+    private fun filterUsers(users: List<Reference<User>>, querySearch: String): List<Reference<User>> {
         return users.filter { user ->
-            user.username.contains(querySearch, ignoreCase = true)
+            user.data.username.contains(querySearch, ignoreCase = true)
         }
     }
 
-    suspend fun getUsersFromSearch(querySearch: String): List<User>? {
-        val allUsers = getUsers() ?: return null
+    suspend fun getUsersFromSearch(querySearch: String, groupReferenceString: String): List<Reference<User>>? {
+        val allUsers = getUsers(groupReferenceString) ?: return null
         return filterUsers(allUsers, querySearch)
     }
 
@@ -198,14 +234,8 @@ constructor(
         // Fields
         const val USER_ID_FIELD = "userId"
         const val GROUP_ID_FIELD = "groupId"
+        const val USER_GROUP_STATE_FIELD = "state"
         const val ACTIVITY_ID_FIELD = "activityId"
-    // ================= Constants ================================ //
-    companion object {
-        // Fields
-        private const val USER_ID_FIELD = "userId"
-        private const val GROUP_ID_FIELD = "groupId"
-        private const val UUID_FIELD = "uuid"
-        private const val ACTIVITY_ID_FIELD = "activityId"
 
         // Collection/Documents Constants
          const val USER_GROUP_COLLECTION = "UsersGroups"
