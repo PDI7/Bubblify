@@ -80,18 +80,18 @@ constructor(
     suspend fun delete(groupId: String) {
         firestore.collection(GROUP_COLLECTION).document(groupId).delete().await()
     }
-        //===============================================================//
-        //======================== USER METHODS =========================//
-        //===============================================================//
+    //===============================================================//
+    //======================== USER METHODS =========================//
+    //===============================================================//
 
-        suspend fun getCurrentUser(): Reference<User> {
-            val documentReference =
-                firestore.collection(USER_COLLECTION).document(auth.currentUserId).get().await()
-            return Reference(
-                documentReference.id,
-                documentReference.toObject()!!
-            )
-        }
+    suspend fun getCurrentUser(): Reference<User> {
+        val documentReference =
+            firestore.collection(USER_COLLECTION).document(auth.currentUserId).get().await()
+        return Reference(
+            documentReference.id,
+            documentReference.toObject()!!
+        )
+    }
 
     private suspend fun getUsers(): List<User>? =
         firestore.collection(USER_COLLECTION).get().await().toObjects()
@@ -102,7 +102,7 @@ constructor(
         }
     }
 
-    suspend fun getUsersFromSearch(querySearch: String): List<User>?  {
+    suspend fun getUsersFromSearch(querySearch: String): List<User>? {
         val allUsers = getUsers() ?: return null
         return filterUsers(allUsers, querySearch)
     }
@@ -110,28 +110,24 @@ constructor(
     suspend fun createUser(userId: String, user: User) {
         firestore.collection(USER_COLLECTION).document(userId).set(user).await()
     }
-        suspend fun createUser(userId: String, user: User) {
-            firestore.collection(USER_COLLECTION).document(userId).set(user).await()
-        }
 
-
-        suspend fun deleteUser(userId: String) {
-            firestore.collection(USER_COLLECTION).document(userId).delete().await()
-        }
-
-
-        // ================= Constants ================================ //
-        companion object {
-            // Fields
-            private const val USER_ID_FIELD = "userId"
-            private const val GROUP_ID_FIELD = "groupId"
-            private const val UUID_FIELD = "uuid"
-            private const val ACTIVITY_ID_FIELD = "activityId"
-
-            // Collection/Documents Constants
-            private const val USER_GROUP_COLLECTION = "UsersGroups"
-            private const val GROUP_COLLECTION = "Groups"
-            private const val USER_COLLECTION = "Users"
-            private const val ACTIVITY_COLLECTION = "Activities"
-        }
+    suspend fun deleteUser(userId: String) {
+        firestore.collection(USER_COLLECTION).document(userId).delete().await()
     }
+
+
+    // ================= Constants ================================ //
+    companion object {
+        // Fields
+        private const val USER_ID_FIELD = "userId"
+        private const val GROUP_ID_FIELD = "groupId"
+        private const val UUID_FIELD = "uuid"
+        private const val ACTIVITY_ID_FIELD = "activityId"
+
+        // Collection/Documents Constants
+        private const val USER_GROUP_COLLECTION = "UsersGroups"
+        private const val GROUP_COLLECTION = "Groups"
+        private const val USER_COLLECTION = "Users"
+        private const val ACTIVITY_COLLECTION = "Activities"
+    }
+}

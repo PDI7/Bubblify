@@ -95,7 +95,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
                 )
             } },
             actions = {
-                IconButton(onClick = { /* Open Edit Popup */ }) {
+                IconButton(onClick = { navController.navigate("groupSettings") }) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
                         contentDescription = "Edit"
