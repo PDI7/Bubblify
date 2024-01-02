@@ -22,10 +22,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
 
 @Composable
-fun NavigationBar() {
-    var selectedItem by remember { mutableIntStateOf(0) }
+fun NavigationBar(navController : NavController) {
+    var selectedItem by remember { mutableIntStateOf(1) }
     Box( // Navigation bar at the bottom, this box is NEEDED
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.BottomCenter
@@ -35,19 +36,29 @@ fun NavigationBar() {
                 icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
                 label = { Text("Home") },
                 selected = selectedItem == 0,
-                onClick = { selectedItem = 0 }
+                onClick = {
+                    selectedItem = 0
+                    navController.navigate("home")
+                }
             )
             NavigationBarItem(
                 icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Profile") },
                 label = { Text("Profile") },
                 selected = selectedItem == 1,
-                onClick = { selectedItem = 1 }
+                onClick = {
+                    selectedItem = 1
+                    navController.navigate("profile")
+                }
             )
             NavigationBarItem(
                 icon = { Icon(Icons.Filled.Settings, contentDescription = "More") },
                 label = { Text("More") },
                 selected = selectedItem == 2,
-                onClick = { selectedItem = 2 })
+                onClick = {
+                    selectedItem = 2
+                    navController.navigate("more")
+                }
+            )
         }
     }
 }

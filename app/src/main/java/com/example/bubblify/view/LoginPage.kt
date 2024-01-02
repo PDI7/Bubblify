@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bubblify.MainState
 import com.example.bubblify.view.common.EmailField
@@ -44,13 +45,13 @@ fun LoginPage(
     ) {
         Title(text = "Login", Modifier.titleModifier())
 
-        EmailField(uiState.email, viewModel::onEmailChange, fieldModifier)
+        EmailField(uiState.email, viewModel::onEmailChange, fieldModifier.then(Modifier.testTag("emailField")))
 
-        PasswordField(uiState.password, viewModel::onPasswordChange, fieldModifier)
+        PasswordField(uiState.password, viewModel::onPasswordChange, fieldModifier.then(Modifier.testTag("passwordField")))
 
         if (uiState.error != null) Text(text = uiState.error!!, color = Color.Red)
 
-        PrimaryButton(text = "Login", modifier = Modifier.basicButton()) {
+        PrimaryButton(text = "Login", modifier = Modifier.basicButton().then(Modifier.testTag("loginButton"))) {
             viewModel.onLogInClick(openAndPopUp = { route, popUp ->
                 mainState.navigateAndPopUp(
                     route,
@@ -59,7 +60,7 @@ fun LoginPage(
             })
         }
 
-        SecondaryButton(text = "Sign up", modifier = Modifier.basicButton()) {
+        SecondaryButton(text = "Sign up",  modifier = Modifier.basicButton().then(Modifier.testTag("singupbutton"))) {
             mainState.navigate("signUp")
         }
     }
