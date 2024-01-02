@@ -126,12 +126,11 @@ constructor(
     private fun linkAccount(openAndPopUp: (String, String) -> Unit) =
         viewModelScope.launch {
             val user = User(
-                uuid = accountService.currentUserId,
                 username = username,
                 email = email,
             )
 
-            storageService.createUser(user)
+            storageService.createUser(accountService.currentUserId, user)
             Toast.makeText(application, "Successfully registered!", Toast.LENGTH_SHORT).show()
             openAndPopUp("login", "signup")
         }
