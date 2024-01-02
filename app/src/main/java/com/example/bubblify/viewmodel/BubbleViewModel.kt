@@ -25,11 +25,11 @@ constructor(
 
 
     // Fetch all activities from the group
-    fun fetchActivities(groupId: String) {
+    fun fetchActivities() {
         viewModelScope.launch {
             try {
                 // Get all activities from a group
-                val value = storageService.getActivities(groupId)
+                val value = storageService.getActivities("nLCaoyJWKw59XNuf0Frj")
                 _activities.value = value
             } catch (e: Exception){
                 // If there is an error, log it

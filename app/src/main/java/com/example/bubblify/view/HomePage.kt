@@ -24,12 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.bubblify.model.Group
-import com.example.bubblify.model.Reference
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.HomeViewModel
 import kotlinx.coroutines.delay
 import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
-import com.google.firebase.firestore.DocumentReference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -69,8 +67,7 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
             groups!!.forEach { group ->
                 GroupItem(
                     sharedHomeBubbleViewModel = sharedHomeBubbleViewModel,
-                    group = group.data,
-                    groupId = group.reference.id,
+                    group = group,
                     navController = navController,
                     modifier = Modifier
                         .align(alignment = Alignment.TopStart)
@@ -104,11 +101,11 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
 
 // Group Button
 @Composable
-fun GroupItem(group: Group, groupId: String, modifier: Modifier = Modifier, navController: NavController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
+fun GroupItem(group: Group, modifier: Modifier = Modifier, navController: NavController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
     FilledTonalButton(
         onClick = {
             sharedHomeBubbleViewModel.addGroup(group)
-            navController.navigate("bubbleMain/$groupId")
+            navController.navigate("bubbleMain")
         },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
         modifier = modifier

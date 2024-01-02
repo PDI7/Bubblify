@@ -7,7 +7,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.bubblify.model.Group
-import com.example.bubblify.model.Reference
 import com.example.bubblify.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -22,8 +21,8 @@ constructor(
     private val storageService: StorageService
 ) : AndroidViewModel(application = application) {
 
-    private val _groups = MutableLiveData<List<Reference<Group>>>()
-    val groups: LiveData<List<Reference<Group>>> = _groups
+    private val _groups = MutableLiveData<List<Group>>()
+    val groups: LiveData<List<Group>> = _groups
 
 
     // Fetch all groups from the database
@@ -31,8 +30,8 @@ constructor(
         viewModelScope.launch {
             try {
                 // Get all groups from the current user
-                val value = storageService.getAllGroupsWithReferenceFromCurrentUser()
-                _groups.value = value.sortedBy { it.data.name }
+                val value = storageService.getAllGroupsFromCurrentUser()
+                _groups.value = value.sortedBy { it.name }
             } catch (e: Exception){
                 // If there is an error, log it
                 Log.d("HomeViewModel", "fetchGroups: ${e.message}")
