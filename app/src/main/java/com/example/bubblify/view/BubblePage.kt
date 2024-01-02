@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavHostController
 import com.example.bubblify.R
 import com.example.bubblify.model.Activity
@@ -46,7 +47,7 @@ import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
+fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel, groupId: String?) {
 
     // Add the listener
     val activityList by bubbleViewModel.activities.observeAsState(null)
@@ -54,8 +55,10 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 
     // Get the data before starting the UI
     LaunchedEffect(Unit) {
-        bubbleViewModel.fetchActivities()
-        Log.d("Hallo", activityList.toString())
+        if(groupId != null)
+            bubbleViewModel.fetchActivities(groupId)
+        else
+            Log.d("Bonsoir non", groupId.toString())
     }
 
     /*

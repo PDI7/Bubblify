@@ -4,9 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.bubblify.view.HomePage
 import com.example.bubblify.view.BubblePage
 import com.example.bubblify.view.HomePage
 import com.example.bubblify.view.LoginPage
@@ -37,14 +41,16 @@ class MainActivity : ComponentActivity() {
             // Navigation Core
             val navController = rememberNavController()
             val mainState = MainState(navController)
-            NavHost(navController = navController, startDestination = "bubbleMain") {
+            NavHost(navController = navController, startDestination = "home") {
                 composable("profile") { ProfilePage(profileViewModel, navController) }
                 composable("login") { LoginPage(mainState) }
                 composable("signUp") { SignUpPage(mainState) }
                 composable("more") { MorePage(moreViewModel, navController) }
                 composable("setActivity") { SetActivityPage(setActivityViewModel, navController) }
                 composable("home") { HomePage(homeViewModel, navController, sharedBubbleListBubbleViewModel) }
-                composable("bubbleMain") { BubblePage(bubbleViewModel, navController, sharedBubbleListBubbleViewModel) }
+                composable("bubbleMain/{groupId}", arguments = listOf(navArgument("groupId") { type = NavType.StringType})) { backStackEntry ->
+                    val groupId = backStackEntry.arguments?.getString("groupId")
+                    BubblePage(bubbleViewModel, navController, sharedBubbleListBubbleViewModel, groupId) }
             }
         }
     }
