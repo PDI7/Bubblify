@@ -1,6 +1,8 @@
 package com.example.bubblify.model
 
 data class User(
-    val username: String = "",
-    val email: String = "",
-)
+    val username: String,
+    val email: String,
+) {
+    constructor() : this("", "")
+}

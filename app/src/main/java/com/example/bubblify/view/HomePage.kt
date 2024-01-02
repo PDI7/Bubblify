@@ -15,8 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,6 +26,7 @@ import androidx.navigation.NavController
 import com.example.bubblify.model.Group
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.HomeViewModel
+import kotlinx.coroutines.delay
 import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,9 +38,9 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
 
     // Get the data before starting the UI
     LaunchedEffect(Unit) {
+        delay(500)
         homeViewModel.fetchGroups()
     }
-
 
     Box(
         modifier = Modifier
@@ -62,7 +63,7 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
             // Waiting for the data (and avoid app crash)
             Text(text = "Loading...")
         } else {
-            // Display the list of credit cards
+            // Display the list of groups
             groups!!.forEach { group ->
                 GroupItem(
                     sharedHomeBubbleViewModel = sharedHomeBubbleViewModel,
@@ -78,7 +79,10 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
             }
             // Display an empty button to add a new group
             FilledTonalButton(
-                onClick = { navController.navigate("home") },
+                onClick = {
+                    homeViewModel.createGroup()
+                    navController.navigate("home")
+                          },
                 modifier = Modifier
                     .align(alignment = Alignment.TopStart)
                     .offset(

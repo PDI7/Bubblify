@@ -26,15 +26,20 @@ constructor(
     //======================== GROUP METHODS ========================//
     //===============================================================//
 
+    @Deprecated("Use getAllGroupsWithReferenceFromCurrentUser instead")
+    suspend fun getGroups(): List<Group>? =
+        firestore.collection(GROUP_COLLECTION).get().await().toObjects()
+
     suspend fun getGroup(groupId: String): Group? =
         firestore.collection(GROUP_COLLECTION).document(groupId).get().await().toObject()
 
-    // Get all groups from the database
+    @Deprecated("Use getAllGroupsWithReferenceFromCurrentUser instead")
     suspend fun getAllGroups(): List<Group> {
         return firestore.collection(GROUP_COLLECTION).get().await().toObjects()
     }
 
     // Get all the groups from the current User
+    @Deprecated("Use getAllGroupsWithReferenceFromCurrentUser instead")
     suspend fun getAllGroupsFromCurrentUser(): List<Group> {
         // Get the current user ID
         val userReference = firestore.collection(USER_COLLECTION).document(auth.currentUserId)
@@ -48,6 +53,33 @@ constructor(
             .mapNotNull { document ->
                 val groupReference = document.getDocumentReference(GROUP_ID_FIELD)
                 groupReference!!.get().await().toObject<Group>()
+            }
+            .toList()
+        // Return the list
+        return groups
+    }
+
+    suspend fun getAllGroupsWithReferenceFromCurrentUser(): List<Reference<Group>> {
+        // Get the current user ID
+        val userReference = firestore.collection(USER_COLLECTION).document(auth.currentUserId)
+        // Fetch all the groups where the user are
+        val userGroups =
+            firestore.collection(USER_GROUP_COLLECTION).whereEqualTo(USER_ID_FIELD, userReference)
+                .get().await()
+        // Fetch all the groups where the reference (groupId) corresponding
+        val groups = userGroups.documents
+            .filter { it.exists() }
+            .mapNotNull { document ->
+                val groupReference = document.getDocumentReference(GROUP_ID_FIELD)
+                val group = groupReference!!.get().await().toObject<Group>()
+                if (group == null) {
+                    document.reference.delete().await()
+                    return@mapNotNull null
+                }
+                Reference(
+                    groupReference,
+                    group
+                )
             }
             .toList()
         // Return the list
@@ -69,7 +101,8 @@ constructor(
 
     suspend fun deleteGroup(groupId: String) {
         val groupReference = firestore.collection(GROUP_COLLECTION).document(groupId)
-        firestore.collection(USER_GROUP_COLLECTION).whereEqualTo(GROUP_ID_FIELD, groupId).get()
+        firestore.collection(USER_GROUP_COLLECTION).whereEqualTo(GROUP_ID_FIELD, groupReference)
+            .get()
             .await()
             .documents.forEach {
                 it.reference.delete().await()
@@ -85,7 +118,7 @@ constructor(
         val documentReference =
             firestore.collection(USER_COLLECTION).document(auth.currentUserId).get().await()
         return Reference(
-            documentReference.id,
+            documentReference.reference,
             documentReference.toObject()!!
         )
     }
@@ -94,11 +127,51 @@ constructor(
         firestore.collection(USER_COLLECTION).document(userId).set(user).await()
     }
 
-
     suspend fun deleteUser(userId: String) {
         firestore.collection(USER_COLLECTION).document(userId).delete().await()
     }
 
+    //===============================================================//
+    //======================== UserGroup METHODS ====================//
+    //===============================================================//
+    suspend fun setActivityForUserInGroup(
+        activityReference: DocumentReference?,
+        userReference: DocumentReference,
+        groupReference: DocumentReference
+    ) {
+        val userGroup = firestore.collection(USER_GROUP_COLLECTION)
+            .whereEqualTo(USER_ID_FIELD, userReference)
+            .whereEqualTo(GROUP_ID_FIELD, groupReference)
+            .get()
+            .await()
+
+        userGroup.documents.first()
+            .reference
+            .update(ACTIVITY_ID_FIELD, activityReference)
+            .await()
+    }
+
+    suspend fun addUserToGroup(
+        userReference: DocumentReference,
+        groupReference: DocumentReference
+    ): DocumentReference {
+        val userGroup = UserGroup(userReference, groupReference, null, UserGroupState.INVITED)
+        return firestore.collection(USER_GROUP_COLLECTION).add(userGroup).await()
+    }
+
+    suspend fun removeUserFromGroup(
+        userReference: DocumentReference,
+        groupReference: DocumentReference
+    ) {
+        firestore.collection(USER_GROUP_COLLECTION)
+            .whereEqualTo(USER_ID_FIELD, userReference)
+            .whereEqualTo(GROUP_ID_FIELD, groupReference)
+            .get()
+            .await()
+            .documents.forEach {
+                it.reference.delete().await()
+            }
+    }
     //===============================================================//
     //======================== ACTIVITY METHODS =========================//
     //===============================================================//
@@ -113,15 +186,14 @@ constructor(
     // ================= Constants ================================ //
     companion object {
         // Fields
-        private const val USER_ID_FIELD = "userId"
-        private const val UUID_FIELD = "uuid"
-        private const val GROUP_ID_FIELD = "groupId"
-        private const val ACTIVITY_ID_FIELD = "activityId"
+        const val USER_ID_FIELD = "userId"
+        const val GROUP_ID_FIELD = "groupId"
+        const val ACTIVITY_ID_FIELD = "activityId"
 
-        // Collections
-        private const val GROUP_COLLECTION = "Groups"
-        private const val USER_COLLECTION = "Users"
-        private const val USER_GROUP_COLLECTION = "UsersGroups"
-        private const val ACTIVITY_COLLECTION = "Activities"
+        // Collection/Documents Constants
+        const val USER_GROUP_COLLECTION = "UsersGroups"
+        const val GROUP_COLLECTION = "Groups"
+        const val USER_COLLECTION = "Users"
+        const val ACTIVITY_COLLECTION = "Activities"
     }
 }
