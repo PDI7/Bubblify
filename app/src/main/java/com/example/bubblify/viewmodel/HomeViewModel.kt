@@ -31,7 +31,7 @@ constructor(
             try {
                 // Get all groups from the current user
                 val value = storageService.getAllGroupsFromCurrentUser()
-                _groups.value = value
+                _groups.value = value.sortedBy { it.name }
             } catch (e: Exception){
                 // If there is an error, log it
                 Log.d("HomeViewModel", "fetchGroups: ${e.message}")
