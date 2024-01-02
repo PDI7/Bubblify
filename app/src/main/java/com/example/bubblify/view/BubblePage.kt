@@ -49,18 +49,13 @@ import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
 fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
 
     // Add the listener
-    val groups by bubbleViewModel.groups.observeAsState(null)
+    val activityList by bubbleViewModel.activities.observeAsState(null)
     val home = listOf(200.dp, 150.dp, 180.dp, 200.dp, 150.dp)
-    val activityList = listOf(
-        Activity("Work", "Erasmus Friends", ActivityIcon.WORKING),
-        Activity("Eat", "Erasmus Friends", ActivityIcon.EATING),
-        Activity("Sleep", "Erasmus Friends", ActivityIcon.SLEEPING)
-    )
 
     // Get the data before starting the UI
     LaunchedEffect(Unit) {
-        bubbleViewModel.fetchGroups()
-        Log.d("Hallo", groups.toString())
+        bubbleViewModel.fetchActivities()
+        Log.d("Hallo", activityList.toString())
     }
 
     /*
@@ -100,14 +95,18 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
                 }
             }
         )
-
-        LazyVerticalGrid(
-            modifier = Modifier.align(Alignment.Center),
-            columns = GridCells.Fixed(3), content = {
-                items(activityList.size) { index ->
-                    Bubble(home[index], activityList[index])
-                }
-            })
+        if (activityList == null) {
+            // Waiting for the data (and avoid app crash)
+            Text(text = "Loading...")
+        } else {
+            LazyVerticalGrid(
+                modifier = Modifier.align(Alignment.Center),
+                columns = GridCells.Fixed(3), content = {
+                    items(activityList!!.size) { index ->
+                        Bubble(home[index], activityList!![index])
+                    }
+                })
+        }
 
         FilledTonalButton(
             onClick = { navController.navigate("setActivity") },
@@ -125,7 +124,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 }
 
 @Composable
-fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity = Activity("Work", "Erasmus Friends", ActivityIcon.WORKING)) {
+fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity) {
     Button(onClick = {
 
     }, modifier = Modifier
@@ -143,7 +142,7 @@ fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity = Activity("Work", "Erasm
             ) {
                 for (i in 0..4) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_background),
+                        painter = painterResource(id = R.drawable.profilepic),
                         contentDescription = "",
                         modifier = Modifier
                             .weight(1f)
@@ -152,7 +151,7 @@ fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity = Activity("Work", "Erasm
                 }
             }
             Image(
-                painter = painterResource(id = activity.icon.icon),
+                painter = painterResource(id = activity.icon!!.icon),
                 contentDescription = "",
                 modifier = Modifier.weight(1f),
             )

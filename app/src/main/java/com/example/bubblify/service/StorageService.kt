@@ -1,5 +1,7 @@
 package com.example.bubblify.service
 
+import android.util.Log
+import com.example.bubblify.model.Activity
 import com.example.bubblify.model.Group
 import com.example.bubblify.model.Reference
 import com.example.bubblify.model.User
@@ -7,6 +9,7 @@ import com.example.bubblify.model.UserGroup
 import com.example.bubblify.model.UserGroupState
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.model.DocumentKey
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import kotlinx.coroutines.tasks.await
@@ -94,6 +97,16 @@ constructor(
 
     suspend fun deleteUser(userId: String) {
         firestore.collection(USER_COLLECTION).document(userId).delete().await()
+    }
+
+    //===============================================================//
+    //======================== ACTIVITY METHODS =========================//
+    //===============================================================//
+    suspend fun getActivities(groupId: String): List<Activity> {
+        // Get the DocumentReference with the groupId
+        val groupRef = firestore.document("/Groups/$groupId")
+        // Get all the activities from the current group and return the list
+        return firestore.collection(ACTIVITY_COLLECTION).whereEqualTo(GROUP_ID_FIELD, groupRef).get().await().toObjects<Activity>()
     }
 
 
