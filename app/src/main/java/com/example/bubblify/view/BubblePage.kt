@@ -2,15 +2,13 @@ package com.example.bubblify.view
 
 import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -18,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,7 +29,6 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -91,7 +87,13 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
                 }
             },
             modifier = Modifier.align(Alignment.TopCenter),
-            title = { sharedBubbleListBubbleViewModel.group?.let { Text(it.name, maxLines = 1) } },
+            title = { sharedBubbleListBubbleViewModel.group?.let {
+                Text(
+                    it.name,
+                    maxLines = 1,
+                    modifier = Modifier.clickable { /* Open edit name popup */ }
+                )
+            } },
             actions = {
                 IconButton(onClick = { /* Open Edit Popup */ }) {
                     Icon(

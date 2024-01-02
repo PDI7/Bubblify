@@ -101,8 +101,6 @@ constructor(
         return filterUsers(allUsers, querySearch)
     }
 
-    suspend fun createUser(user: User): DocumentReference? {
-        return firestore.collection(USER_COLLECTION).add(user).await()
     suspend fun createUser(userId: String, user: User) {
         firestore.collection(USER_COLLECTION).document(userId).set(user).await()
     }

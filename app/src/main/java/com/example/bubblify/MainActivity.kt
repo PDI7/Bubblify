@@ -8,15 +8,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.view.AddMembersPage
-import com.example.bubblify.view.HomePage
 import com.example.bubblify.view.BubblePage
+import com.example.bubblify.view.HomePage
 import com.example.bubblify.view.LoginPage
 import com.example.bubblify.view.MorePage
 import com.example.bubblify.view.ProfilePage
 import com.example.bubblify.view.SetActivityPage
 import com.example.bubblify.view.SignUpPage
-import com.example.bubblify.viewmodel.HomeViewModel
 import com.example.bubblify.viewmodel.BubbleViewModel
+import com.example.bubblify.viewmodel.HomeViewModel
 import com.example.bubblify.viewmodel.MoreViewModel
 import com.example.bubblify.viewmodel.ProfileViewModel
 import com.example.bubblify.viewmodel.SetActivityViewModel
@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
             // Navigation Core
             val navController = rememberNavController()
             val mainState = MainState(navController)
-            NavHost(navController = navController, startDestination = "addMembers") {
+            NavHost(navController = navController, startDestination = "login") {
                 composable("profile") { ProfilePage(profileViewModel, navController) }
                 composable("login") { LoginPage(mainState) }
                 composable("signUp") { SignUpPage(mainState) }
