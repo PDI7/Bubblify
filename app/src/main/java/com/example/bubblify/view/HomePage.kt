@@ -107,7 +107,7 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
 fun GroupItem(group: Group, groupId: String, modifier: Modifier = Modifier, navController: NavController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
     FilledTonalButton(
         onClick = {
-            sharedHomeBubbleViewModel.addGroup(group)
+            sharedHomeBubbleViewModel.addGroup(group, groupId)
             navController.navigate("bubbleMain/$groupId")
         },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),

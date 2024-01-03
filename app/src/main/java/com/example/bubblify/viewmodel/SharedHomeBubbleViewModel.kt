@@ -10,7 +10,11 @@ class SharedHomeBubbleViewModel : ViewModel(){
     var group by mutableStateOf<Group?>(null)
         private set
 
-    fun addGroup(group: Group) {
+    var groupId by mutableStateOf<String?>(null)
+        private set
+
+    fun addGroup(group: Group, groupId : String) {
         this.group = group
+        this.groupId = groupId
     }
 }
