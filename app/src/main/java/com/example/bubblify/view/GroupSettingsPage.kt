@@ -54,13 +54,16 @@ import com.example.bubblify.viewmodel.GroupSettingsViewModel
 @Composable
 fun GroupSettingsPage(
     mainState: MainState,
+    groupId: String?,
     viewModel: GroupSettingsViewModel = hiltViewModel()
 ) {
     var selectedChoice by remember { mutableStateOf("Members") }
     val users by viewModel.users.observeAsState(initial = emptyList())
 
     LaunchedEffect(Unit) {
-        viewModel.fetchUsers("PeUMRcsjAhi0qGtYWeU0")
+        if (groupId != null) {
+            viewModel.fetchUsers(groupId)
+        }
     }
 
     Box(
@@ -74,7 +77,7 @@ fun GroupSettingsPage(
         ) {
             CenterAlignedTopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { mainState.navigate("bubbleMain") }) {
+                    IconButton(onClick = { mainState.navigate("bubbleMain/$groupId") }) {
                         Icon(
                             imageVector = Icons.Outlined.ArrowBack,
                             contentDescription = "ArrowBack"
@@ -160,7 +163,7 @@ fun GroupSettingsPage(
             }
 
             when (selectedChoice) {
-                "Members" -> DisplayMembersContent(users, mainState, viewModel)
+                "Members" -> DisplayMembersContent(users, mainState, groupId, viewModel)
                 "Activities" -> DisplayActivitiesContent()
             }
         }
@@ -169,7 +172,7 @@ fun GroupSettingsPage(
 }
 
 @Composable
-fun DisplayMembersContent(users: List<Reference<User>>, mainState: MainState, viewModel: GroupSettingsViewModel) {
+fun DisplayMembersContent(users: List<Reference<User>>, mainState: MainState, groupId: String?, viewModel: GroupSettingsViewModel) {
     LazyColumn (
         modifier = Modifier.padding(16.dp)
     ) {
@@ -228,7 +231,7 @@ fun DisplayMembersContent(users: List<Reference<User>>, mainState: MainState, vi
     }
 
     Button(
-        onClick = { mainState.navigate("addMembers") },
+        onClick = { mainState.navigate("addMembers/$groupId") },
         modifier = Modifier
             .padding(16.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),

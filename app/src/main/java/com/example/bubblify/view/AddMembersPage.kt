@@ -45,11 +45,11 @@ import com.example.bubblify.viewmodel.AddMembersViewModel
 @Composable
 fun AddMembersPage(
     mainState: MainState,
+    groupId: String?,
     viewModel: AddMembersViewModel = hiltViewModel()
 ) {
     var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
     val searchResults by viewModel.searchResults.observeAsState(initial = emptyList())
-    var showDialog by remember { mutableStateOf(false) }
     var selectedUser by remember { mutableStateOf<Reference<User>?>(null) }
 
     Box(
@@ -58,7 +58,7 @@ fun AddMembersPage(
     ) {
         CenterAlignedTopAppBar(
             navigationIcon = {
-                IconButton(onClick = { mainState.navigate("groupSettings") }) {
+                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") }) {
                     Icon(
                         imageVector = Icons.Outlined.ArrowBack,
                         contentDescription = "ArrowBack"
@@ -79,7 +79,9 @@ fun AddMembersPage(
                 value = searchQuery,
                 onValueChange = {
                     searchQuery = it
-                    viewModel.searchMembers(searchQuery.text)
+                    if (groupId != null) {
+                        viewModel.searchMembers(searchQuery.text, groupId)
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()

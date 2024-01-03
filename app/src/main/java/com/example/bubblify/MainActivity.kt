@@ -8,8 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bubblify.view.AddMembersPage
 import androidx.navigation.navArgument
+import com.example.bubblify.view.AddMembersPage
 import com.example.bubblify.view.BubblePage
 import com.example.bubblify.view.GroupSettingsPage
 import com.example.bubblify.view.HomePage
@@ -66,8 +66,20 @@ class MainActivity : ComponentActivity() {
                         groupId
                     )
                 }
-                composable("addMembers") { AddMembersPage(mainState) }
-                composable("groupSettings") { GroupSettingsPage(mainState) }
+                composable(
+                    "groupSettings/{groupId}",
+                    arguments = listOf(navArgument("groupId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val groupId = backStackEntry.arguments?.getString("groupId")
+                    GroupSettingsPage(mainState, groupId)
+                }
+                composable(
+                    "addMembers/{groupId}",
+                    arguments = listOf(navArgument("groupId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val groupId = backStackEntry.arguments?.getString("groupId")
+                    AddMembersPage(mainState, groupId)
+                }
             }
         }
     }

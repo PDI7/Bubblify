@@ -25,10 +25,10 @@ constructor(
     private val _searchResults = MutableLiveData<List<Reference<User>>>()
     val searchResults: LiveData<List<Reference<User>>> get() = _searchResults
 
-    fun searchMembers(searchQuery: String) {
+    fun searchMembers(searchQuery: String, groupReferenceString: String) {
         viewModelScope.launch {
             try {
-                val value = storageService.getUsersFromSearch(searchQuery, "PeUMRcsjAhi0qGtYWeU0");
+                val value = storageService.getUsersFromSearch(searchQuery, groupReferenceString);
                 _searchResults.value = value!!.sortedBy { it.data.username }
             } catch (e: Exception) {
                 Log.e("error", e.message.toString())
