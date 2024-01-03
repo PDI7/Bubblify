@@ -132,7 +132,7 @@ fun AddMembersPage(
                 }
             }
         }
-        NavigationBar(navController = mainState.navController)
+        NavigationBar(mainState.navController)
     }
 }
 
