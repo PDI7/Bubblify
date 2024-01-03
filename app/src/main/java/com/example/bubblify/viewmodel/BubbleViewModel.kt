@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.bubblify.model.Activity
 import com.example.bubblify.model.Group
 import com.example.bubblify.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,17 +20,17 @@ constructor(
     private val application: Application,
     private val storageService: StorageService
 ) : ViewModel(){
-    private val _groups = MutableLiveData<List<Group>>()
-    val groups: LiveData<List<Group>> = _groups
+    private val _activities = MutableLiveData<List<Activity>>()
+    val activities: LiveData<List<Activity>> = _activities
 
 
-    // Fetch all groups from the database
-    fun fetchGroups() {
+    // Fetch all activities from the group
+    fun fetchActivities(groupId: String) {
         viewModelScope.launch {
             try {
-                // Get all groups from current user
-                val value = storageService.getAllGroupsFromCurrentUser()
-                _groups.value = value
+                // Get all activities from a group
+                val value = storageService.getActivities(groupId)
+                _activities.value = value
             } catch (e: Exception){
                 // If there is an error, log it
                 Log.d("BubbleViewModel", "fetchGroups: ${e.message}")

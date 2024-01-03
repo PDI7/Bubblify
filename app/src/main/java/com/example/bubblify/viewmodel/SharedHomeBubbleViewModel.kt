@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.bubblify.model.Group
 
-class SharedBubbleListBubbleViewModel : ViewModel(){
+class SharedHomeBubbleViewModel : ViewModel(){
     var group by mutableStateOf<Group?>(null)
         private set
 

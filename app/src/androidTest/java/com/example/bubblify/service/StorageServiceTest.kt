@@ -1,6 +1,8 @@
 package com.example.bubblify.service
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.bubblify.model.Activity
+import com.example.bubblify.model.ActivityIcon
 import com.example.bubblify.model.Group
 import com.example.bubblify.model.User
 import com.example.bubblify.model.UserGroup
@@ -85,7 +87,8 @@ class StorageServiceTest {
         storageService.createUser(randomId, User(USERNAME, EMAIL))
 
         // Assert
-        val result = firestore.collection("Users").document(randomId).get().await().toObject<User>()
+        val result = firestore.collection(StorageService.USER_COLLECTION)
+            .document(randomId).get().await().toObject<User>()
 
         assertEquals(EMAIL, result!!.email)
         assertEquals(USERNAME, result.username)
@@ -132,9 +135,9 @@ class StorageServiceTest {
         // Arrange
         val userReference = storageService.getCurrentUser()
         val activityReference = firestore.collection(StorageService.ACTIVITY_COLLECTION)
-            .document("M1HBlxTypU3MVsz4VxKQ")
+            .document(ACTIVITY_WORK_ID)
         val groupReference =
-            firestore.collection(StorageService.GROUP_COLLECTION).document("nLCaoyJWKw59XNuf0Frj")
+            firestore.collection(StorageService.GROUP_COLLECTION).document(GROUP_1_ID)
 
         // Act
         storageService.setActivityForUserInGroup(
@@ -154,6 +157,40 @@ class StorageServiceTest {
         storageService.setActivityForUserInGroup(null, userReference.reference, groupReference)
     }
 
+    @Test
+    fun createDeleteActivity() = runTest {
+        // Arrange
+        val groupReference =
+            firestore.collection(StorageService.GROUP_COLLECTION).document(GROUP_1_ID)
+        val activity = Activity(groupReference, ACTIVITY_1, ActivityIcon.EATING)
+
+        // Act
+        val activityReference = storageService.createActivity(activity)
+
+        // Assert
+        val result = activityReference.get().await().toObject<Activity>()
+        assertEquals(ACTIVITY_1, result!!.name)
+        assertEquals(ActivityIcon.EATING, result.icon)
+        assertEquals(groupReference, result.groupId)
+
+        // Clean up
+        storageService.deleteActivity(activityReference)
+    }
+
+    @Test
+    fun getActivitiesInGroup() = runTest {
+        // Arrange
+        val groupReference =
+            firestore.collection(StorageService.GROUP_COLLECTION).document(GROUP_1_ID)
+
+        // Act
+        val activities = storageService.getActivitiesInGroup(groupReference)
+
+        // Assert
+        assertNotNull(activities)
+        assertTrue(activities.isNotEmpty())
+    }
+
     private fun assertContains(groups: List<Group>, s: String) {
         assertTrue(groups.any { it.name == s })
     }
@@ -166,7 +203,12 @@ class StorageServiceTest {
 
         // Groups
         private const val GROUP_1 = "Test Group 1"
+        private const val GROUP_1_ID = "nLCaoyJWKw59XNuf0Frj"
         private const val GROUP_2 = "Test Group 2"
         private const val GROUP_3 = "Test Group 3"
+
+        // Activities
+        private const val ACTIVITY_1 = "Test Activity 1"
+        private const val ACTIVITY_WORK_ID = "M1HBlxTypU3MVsz4VxKQ"
     }
 }

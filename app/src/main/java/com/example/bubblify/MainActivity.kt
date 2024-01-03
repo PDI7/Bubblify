@@ -4,10 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.view.AddMembersPage
+import androidx.navigation.navArgument
 import com.example.bubblify.view.BubblePage
 import com.example.bubblify.view.GroupSettingsPage
 import com.example.bubblify.view.HomePage
@@ -21,7 +23,7 @@ import com.example.bubblify.viewmodel.HomeViewModel
 import com.example.bubblify.viewmodel.MoreViewModel
 import com.example.bubblify.viewmodel.ProfileViewModel
 import com.example.bubblify.viewmodel.SetActivityViewModel
-import com.example.bubblify.viewmodel.SharedBubbleListBubbleViewModel
+import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,7 +33,7 @@ class MainActivity : ComponentActivity() {
     private val setActivityViewModel: SetActivityViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
     private val bubbleViewModel: BubbleViewModel by viewModels()
-    private val sharedBubbleListBubbleViewModel: SharedBubbleListBubbleViewModel by viewModels()
+    private val sharedBubbleListBubbleViewModel: SharedHomeBubbleViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +47,25 @@ class MainActivity : ComponentActivity() {
                 composable("signUp") { SignUpPage(mainState) }
                 composable("more") { MorePage(moreViewModel, navController) }
                 composable("setActivity") { SetActivityPage(setActivityViewModel, navController) }
-                composable("home") { HomePage(homeViewModel, navController, sharedBubbleListBubbleViewModel) }
-                composable("bubbleMain") { BubblePage(bubbleViewModel, navController, sharedBubbleListBubbleViewModel) }
+                composable("home") {
+                    HomePage(
+                        homeViewModel,
+                        navController,
+                        sharedBubbleListBubbleViewModel
+                    )
+                }
+                composable(
+                    "bubbleMain/{groupId}",
+                    arguments = listOf(navArgument("groupId") { type = NavType.StringType })
+                ) { backStackEntry ->
+                    val groupId = backStackEntry.arguments?.getString("groupId")
+                    BubblePage(
+                        bubbleViewModel,
+                        navController,
+                        sharedBubbleListBubbleViewModel,
+                        groupId
+                    )
+                }
                 composable("addMembers") { AddMembersPage(mainState) }
                 composable("groupSettings") { GroupSettingsPage(mainState) }
             }

@@ -1,7 +1,9 @@
 package com.example.bubblify.model
 
+import com.google.firebase.firestore.DocumentReference
+
 data class Activity(
-    val name: String,
-    val groupId: String, // TODO CHANGE TO DocumentReference
-    val icon: ActivityIcon
+    val groupId: DocumentReference? = null,
+    val name: String = "",
+    val icon: ActivityIcon? = null
 )

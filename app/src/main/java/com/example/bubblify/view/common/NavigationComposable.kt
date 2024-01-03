@@ -23,6 +23,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun NavigationBar(navController : NavController) {
@@ -32,10 +34,12 @@ fun NavigationBar(navController : NavController) {
         contentAlignment = Alignment.BottomCenter
     ) {
         NavigationBar {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentDestination = navBackStackEntry?.destination
             NavigationBarItem(
                 icon = { Icon(Icons.Filled.Home, contentDescription = "Home") },
                 label = { Text("Home") },
-                selected = selectedItem == 0,
+                selected = currentDestination?.hierarchy?.any { it.route == "home" } == true,
                 onClick = {
                     selectedItem = 0
                     navController.navigate("home")
@@ -44,7 +48,7 @@ fun NavigationBar(navController : NavController) {
             NavigationBarItem(
                 icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Profile") },
                 label = { Text("Profile") },
-                selected = selectedItem == 1,
+                selected = currentDestination?.hierarchy?.any { it.route == "profile" } == true,
                 onClick = {
                     selectedItem = 1
                     navController.navigate("profile")
@@ -53,7 +57,7 @@ fun NavigationBar(navController : NavController) {
             NavigationBarItem(
                 icon = { Icon(Icons.Filled.Settings, contentDescription = "More") },
                 label = { Text("More") },
-                selected = selectedItem == 2,
+                selected = currentDestination?.hierarchy?.any { it.route == "more" } == true,
                 onClick = {
                     selectedItem = 2
                     navController.navigate("more")
