@@ -84,6 +84,28 @@ constructor(
         return groups
     }
 
+    suspend fun getAllUsersFromGroup(groupReferenceString: String) : List<Reference<User>> {
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
+        val userGroups = firestore.collection(USER_GROUP_COLLECTION)
+            .whereEqualTo(GROUP_ID_FIELD, groupReference)
+            .whereEqualTo(USER_GROUP_STATE_FIELD, "ACCEPTED").get().await()
+
+        val users = userGroups.documents
+            .filter { it.exists() }
+            .mapNotNull { document ->
+                val userReference = document.getDocumentReference(USER_ID_FIELD)
+                val user = userReference!!.get().await().toObject<User>()
+                Reference(
+                    userReference,
+                    user!!
+                )
+            }
+            .toList()
+
+        return users
+    }
+
     suspend fun createGroup(group: Group): DocumentReference {
         val userReference = firestore.collection(USER_COLLECTION).document(auth.currentUserId)
         val groupReference = firestore.collection(GROUP_COLLECTION).add(group).await()
@@ -108,6 +130,7 @@ constructor(
         groupReference.delete().await()
     }
 
+
     //===============================================================//
     //======================== USER METHODS =========================//
     //===============================================================//
@@ -119,6 +142,45 @@ constructor(
             documentReference.reference,
             documentReference.toObject()!!
         )
+    }
+
+    private suspend fun getUsersExceptInGroup(groupReferenceString: String): List<Reference<User>> {
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
+        val userGroups = firestore.collection(USER_GROUP_COLLECTION)
+            .whereEqualTo(GROUP_ID_FIELD, groupReference)
+            .whereIn(USER_GROUP_STATE_FIELD, listOf("ACCEPTED", "INVITED")).get().await()
+
+        val users = firestore.collection(USER_COLLECTION).get().await()
+
+        val usersInGroup = userGroups.documents.mapNotNull { document ->
+            document.toObject<UserGroup>()?.userId
+        }
+
+        val result = users.documents
+            .filter { it.exists() && !usersInGroup.contains(it.reference) }
+            .mapNotNull { document ->
+                val userReference = document.reference
+                val user = userReference.get().await().toObject<User>()
+                Reference(
+                    userReference,
+                    user!!
+                )
+            }
+            .toList()
+
+        return result
+    }
+
+    private fun filterUsers(users: List<Reference<User>>, querySearch: String): List<Reference<User>> {
+        return users.filter { user ->
+            user.data.username.contains(querySearch, ignoreCase = true)
+        }
+    }
+
+    suspend fun getUsersFromSearch(querySearch: String, groupReferenceString: String): List<Reference<User>>? {
+        val allUsers = getUsersExceptInGroup(groupReferenceString) ?: return null
+        return filterUsers(allUsers, querySearch)
     }
 
     suspend fun createUser(userId: String, user: User) {
@@ -213,12 +275,13 @@ constructor(
         // Fields
         const val USER_ID_FIELD = "userId"
         const val GROUP_ID_FIELD = "groupId"
+        const val USER_GROUP_STATE_FIELD = "state"
         const val ACTIVITY_ID_FIELD = "activityId"
 
         // Collection/Documents Constants
-        const val USER_GROUP_COLLECTION = "UsersGroups"
-        const val GROUP_COLLECTION = "Groups"
-        const val USER_COLLECTION = "Users"
-        const val ACTIVITY_COLLECTION = "Activities"
+         const val USER_GROUP_COLLECTION = "UsersGroups"
+         const val GROUP_COLLECTION = "Groups"
+         const val USER_COLLECTION = "Users"
+         const val ACTIVITY_COLLECTION = "Activities"
     }
 }
