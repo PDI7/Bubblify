@@ -1,7 +1,15 @@
 package com.example.bubblify.viewmodel
 
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class SetActivityViewModel : ViewModel() {
+@HiltViewModel
+class SetActivityViewModel
+@Inject
+constructor(
+    private val application: Application,
+) : AndroidViewModel(application = application) {
 
 }

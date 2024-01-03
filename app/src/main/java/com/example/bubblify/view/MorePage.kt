@@ -1,11 +1,8 @@
 package com.example.bubblify.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -25,13 +22,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.bubblify.MainState
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.MoreViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MorePage(moreViewModel: MoreViewModel, navController: NavController) {
+fun MorePage(
+    mainState: MainState,
+    moreViewModel: MoreViewModel = hiltViewModel()
+) {
 
     Box( //this is the screen
         Modifier
@@ -66,20 +67,17 @@ fun MorePage(moreViewModel: MoreViewModel, navController: NavController) {
             text = "Dark mode",
             color = Color.Black.copy(alpha = 0.87f),
             style = TextStyle(
-                fontSize = 15.sp),
+                fontSize = 15.sp
+            ),
             modifier = Modifier
                 .align(alignment = Alignment.TopStart)
-                .offset(x = 24.dp,
-                    y = 80.dp))
+                .offset(
+                    x = 24.dp,
+                    y = 80.dp
+                )
+        )
 
 
-        NavigationBar(navController = navController)
+        NavigationBar(mainState.navController)
     }
 }
-
-/*
-@Preview(widthDp = 360, heightDp = 640)
-@Composable
-private fun MorePagePreview() {
-    MorePage(moreViewModel = MoreViewModel())
-}*/
