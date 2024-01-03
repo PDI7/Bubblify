@@ -1,10 +1,9 @@
 package com.example.bubblify.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -33,9 +32,7 @@ fun SetActivityPage(setActivityViewModel: SetActivityViewModel, navController: N
 
     Box(
         Modifier
-            .requiredWidth(width = 360.dp)
-            .requiredHeight(height = 640.dp)
-            .background(color = Color.White)
+            .fillMaxSize()
     ) {
         //other stuff
         CenterAlignedTopAppBar(
@@ -46,7 +43,7 @@ fun SetActivityPage(setActivityViewModel: SetActivityViewModel, navController: N
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { /* do something */ }) {
+                IconButton(onClick = { navController.navigate("bubbleMain") }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"

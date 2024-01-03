@@ -1,5 +1,6 @@
 package com.example.bubblify.service
 
+import com.example.bubblify.model.Activity
 import com.example.bubblify.model.Group
 import com.example.bubblify.model.Reference
 import com.example.bubblify.model.User
@@ -169,6 +170,43 @@ constructor(
                 it.reference.delete().await()
             }
     }
+
+    //===============================================================//
+    //======================== ACTIVITY METHODS =====================//
+    //===============================================================//
+    suspend fun createActivity(activity: Activity): DocumentReference {
+        return firestore.collection(ACTIVITY_COLLECTION).add(activity).await()
+    }
+
+    suspend fun deleteActivity(activityReference: DocumentReference?) {
+        activityReference!!.delete().await()
+    }
+
+    @Deprecated("Use getActivitiesInGroup instead")
+    suspend fun getActivities(groupId: String): List<Activity> {
+        // Get the DocumentReference with the groupId
+        val groupRef = firestore.document("/Groups/$groupId")
+        // Get all the activities from the current group and return the list
+        return firestore.collection(ACTIVITY_COLLECTION).whereEqualTo(GROUP_ID_FIELD, groupRef)
+            .get().await().toObjects<Activity>()
+    }
+
+    suspend fun getActivitiesInGroup(groupReference: DocumentReference): List<Reference<Activity>> {
+        return firestore.collection(ACTIVITY_COLLECTION)
+            .whereEqualTo(GROUP_ID_FIELD, groupReference)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document ->
+                val activity = document.toObject<Activity>()
+                Reference(
+                    document.reference,
+                    activity!!
+                )
+            }
+            .toList()
+    }
+
 
     // ================= Constants ================================ //
     companion object {
