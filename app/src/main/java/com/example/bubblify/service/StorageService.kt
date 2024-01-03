@@ -196,7 +196,7 @@ constructor(
     //===============================================================//
     suspend fun setActivityForUserInGroup(
         activityReference: DocumentReference?,
-        userReference: Reference<User>,
+        userReference: DocumentReference,
         groupReference: DocumentReference
     ) {
         val userGroup = firestore.collection(USER_GROUP_COLLECTION)

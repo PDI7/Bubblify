@@ -61,7 +61,7 @@ fun SetActivityPage(
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { mainState.navigate("bubbleMain") }) {
+                IconButton(onClick = { mainState.navigate("bubbleMain/${groupId}") }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"
@@ -88,6 +88,7 @@ fun SetActivityPage(
                                 if (groupId != null) {
                                     coroutine.launch {
                                         setActivityViewModel.setActivityForUserInGroup(groupId, activityList!![index].reference)
+                                        mainState.navigate("bubbleMain/${groupId}")
                                     }
                                 }
                             },
