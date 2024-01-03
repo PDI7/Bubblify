@@ -45,18 +45,24 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.bubblify.MainState
 import com.example.bubblify.R
 import com.example.bubblify.model.Activity
 import com.example.bubblify.ui.theme.Purple40
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.BubbleViewModel
-import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
+import com.example.bubblify.viewmodel.state.GroupState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel, groupId: String?) {
+fun BubblePage(
+    mainState: MainState,
+    groupState: GroupState,
+    groupId: String?,
+    bubbleViewModel: BubbleViewModel = hiltViewModel(),
+) {
 
     // Add the listener
     val activityList by bubbleViewModel.activities.observeAsState(null)
@@ -64,7 +70,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 
     // Get the data before starting the UI
     LaunchedEffect(Unit) {
-        if(groupId != null)
+        if (groupId != null)
             bubbleViewModel.fetchActivities(groupId)
         else
             Log.d("Bonsoir non", groupId.toString())
@@ -79,7 +85,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 
         CenterAlignedTopAppBar(
             navigationIcon = {
-                IconButton(onClick = { navController.navigate("home") }) {
+                IconButton(onClick = { mainState.navigate("home") }) {
                     Icon(
                         imageVector = Icons.Outlined.ArrowBack,
                         contentDescription = "ArrowBack"
@@ -87,9 +93,9 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
                 }
             },
             modifier = Modifier.align(Alignment.TopCenter),
-            title = { sharedHomeBubbleViewModel.group?.let { Text(it.name, maxLines = 1) } },
+            title = { groupState.group?.let { Text(it.name, maxLines = 1) } },
             actions = {
-                IconButton(onClick = { navController.navigate("groupSettings/$groupId") }) {
+                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") }) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
                         contentDescription = "Edit"
@@ -115,7 +121,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
         }
 
         FilledTonalButton(
-            onClick = { navController.navigate("setActivity") },
+            onClick = { mainState.navigate("setActivity") },
             modifier = Modifier
                 .padding(bottom = 120.dp)
                 .align(alignment = Alignment.BottomCenter)
@@ -125,7 +131,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
             Text("+ Set my activity")
         }
 
-        NavigationBar(navController = navController)
+        NavigationBar(mainState.navController)
     }
 
 }
@@ -134,10 +140,12 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity, onBubbleClick: () -> Unit) {
     var isDialogOpen by remember { mutableStateOf(false) }
 
-    Button(onClick = { isDialogOpen = !isDialogOpen },
+    Button(
+        onClick = { isDialogOpen = !isDialogOpen },
         modifier = Modifier
             .padding(5.dp)
-            .size(bubbleSize)) {
+            .size(bubbleSize)
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -171,7 +179,7 @@ fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity, onBubbleClick: () -> Uni
 
     if (isDialogOpen) {
         // If the card is open, display the ElevatedCard
-        MinimalDialog(activity = activity, onDismissRequest = { isDialogOpen = false },)
+        MinimalDialog(activity = activity, onDismissRequest = { isDialogOpen = false })
     }
 }
 
@@ -230,11 +238,3 @@ fun MinimalDialog(activity: Activity, onDismissRequest: () -> Unit) {
         }
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun BubblePagePreview(){
-    BubblePage(BubbleViewModel(), rememberNavController())
-}
-*/

@@ -167,7 +167,7 @@ fun GroupSettingsPage(
                 "Activities" -> DisplayActivitiesContent()
             }
         }
-        NavigationBar(navController = mainState.navController)
+        NavigationBar(mainState.navController)
     }
 }
 

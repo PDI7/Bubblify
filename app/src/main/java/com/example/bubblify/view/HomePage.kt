@@ -24,18 +24,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.bubblify.MainState
 import com.example.bubblify.model.Group
-import com.example.bubblify.model.Reference
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.HomeViewModel
+import com.example.bubblify.viewmodel.state.GroupState
 import kotlinx.coroutines.delay
-import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
-import com.google.firebase.firestore.DocumentReference
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
+fun HomePage(
+    mainState: MainState,
+    groupState: GroupState,
+    homeViewModel: HomeViewModel = hiltViewModel(),
+) {
 
     // Add the listener
     val groups by homeViewModel.groups.observeAsState(null)
@@ -70,10 +74,10 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
             // Display the list of groups
             groups!!.forEach { group ->
                 GroupItem(
-                    sharedHomeBubbleViewModel = sharedHomeBubbleViewModel,
+                    groupState = groupState,
                     group = group.data,
                     groupId = group.reference.id,
-                    navController = navController,
+                    navController = mainState.navController,
                     modifier = Modifier
                         .align(alignment = Alignment.TopStart)
                         .offset(
@@ -86,8 +90,8 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
             FilledTonalButton(
                 onClick = {
                     homeViewModel.createGroup()
-                    navController.navigate("home")
-                          },
+                    mainState.navigate("home")
+                },
                 colors = ButtonDefaults.filledTonalButtonColors(Color.White),
                 modifier = Modifier
                     .align(alignment = Alignment.TopStart)
@@ -106,16 +110,22 @@ fun HomePage(homeViewModel: HomeViewModel, navController: NavController, sharedH
                 Text("+")
             }
         }
-        NavigationBar(navController = navController)
+        NavigationBar(mainState.navController)
     }
 }
 
 // Group Button
 @Composable
-fun GroupItem(group: Group, groupId: String, modifier: Modifier = Modifier, navController: NavController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel) {
+fun GroupItem(
+    group: Group,
+    groupId: String,
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    groupState: GroupState
+) {
     FilledTonalButton(
         onClick = {
-            sharedHomeBubbleViewModel.addGroup(group)
+            groupState.addGroup(group)
             navController.navigate("bubbleMain/$groupId")
         },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
@@ -131,11 +141,3 @@ fun GroupItem(group: Group, groupId: String, modifier: Modifier = Modifier, navC
         Text(group.name, color = Color.White)
     }
 }
-
-/*
-@Preview
-@Composable
-private fun LoginScreenPreview() {
-    HomePage(HomeViewModel = HomeViewModel())
-}
-*/
