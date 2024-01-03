@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -27,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bubblify.MainState
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.SetActivityViewModel
+import kotlinx.coroutines.launch
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -68,6 +70,7 @@ fun SetActivityPage(
             }
         )
 
+        val coroutine = rememberCoroutineScope()
         if (activityList == null) {
             // Waiting for the data (and avoid app crash)
             Text(text = "Loading...")
@@ -82,7 +85,11 @@ fun SetActivityPage(
                                 .aspectRatio(1f)
                                 .padding(8.dp),
                             onClick = {
-                                /*TODO*/
+                                if (groupId != null) {
+                                    coroutine.launch {
+                                        setActivityViewModel.setActivityForUserInGroup(groupId, activityList!![index].reference)
+                                    }
+                                }
                             },
                         ) {
                             activityList!![index].data.icon?.let {
