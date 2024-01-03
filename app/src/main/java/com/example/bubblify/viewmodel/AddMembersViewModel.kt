@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.bubblify.model.Reference
 import com.example.bubblify.model.User
 import com.example.bubblify.service.StorageService
+import com.google.firebase.firestore.DocumentReference
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,7 +31,20 @@ constructor(
                 val value = storageService.getUsersFromSearch(searchQuery, "PeUMRcsjAhi0qGtYWeU0");
                 _searchResults.value = value!!.sortedBy { it.data.username }
             } catch (e: Exception) {
-                Log.e("error", e.cause?.message.toString())
+                Log.e("error", e.message.toString())
+            }
+        }
+    }
+
+    fun addMemberToGroup(
+        userReference: DocumentReference,
+        groupReference: DocumentReference
+    ) {
+        viewModelScope.launch {
+            try {
+                storageService.addUserToGroup(userReference, groupReference)
+            } catch (e: Exception) {
+                Log.e("error", e.message.toString())
             }
         }
     }

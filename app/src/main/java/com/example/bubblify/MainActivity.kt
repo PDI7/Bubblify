@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             // Navigation Core
             val navController = rememberNavController()
             val mainState = MainState(navController)
-            NavHost(navController = navController, startDestination = "home") {
+            NavHost(navController = navController, startDestination = "login") {
                 composable("profile") { ProfilePage(profileViewModel, navController) }
                 composable("login") { LoginPage(mainState) }
                 composable("signUp") { SignUpPage(mainState) }

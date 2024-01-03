@@ -143,8 +143,7 @@ constructor(
         )
     }
 
-    private suspend fun getUsers(groupReferenceString: String): List<Reference<User>> {
-        /* TODO: Check if user already in group and display only if not */
+    private suspend fun getUsersExceptInGroup(groupReferenceString: String): List<Reference<User>> {
         val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
 
         val userGroups = firestore.collection(USER_GROUP_COLLECTION)
@@ -153,8 +152,12 @@ constructor(
 
         val users = firestore.collection(USER_COLLECTION).get().await()
 
+        val usersInGroup = userGroups.documents.mapNotNull { document ->
+            document.toObject<UserGroup>()?.userId
+        }
+
         val result = users.documents
-            .filter { it.exists() }
+            .filter { it.exists() && !usersInGroup.contains(it.reference) }
             .mapNotNull { document ->
                 val userReference = document.reference
                 val user = userReference.get().await().toObject<User>()
@@ -175,7 +178,7 @@ constructor(
     }
 
     suspend fun getUsersFromSearch(querySearch: String, groupReferenceString: String): List<Reference<User>>? {
-        val allUsers = getUsers(groupReferenceString) ?: return null
+        val allUsers = getUsersExceptInGroup(groupReferenceString) ?: return null
         return filterUsers(allUsers, querySearch)
     }
 
