@@ -38,11 +38,12 @@ constructor(
 
     fun addMemberToGroup(
         userReference: DocumentReference,
-        groupReference: DocumentReference
+        groupReferenceString: String
     ) {
         viewModelScope.launch {
             try {
-                storageService.addUserToGroup(userReference, groupReference)
+                val res = storageService.addUserToGroup(userReference, groupReferenceString)
+                Log.d("test", res.toString())
             } catch (e: Exception) {
                 Log.e("error", e.message.toString())
             }

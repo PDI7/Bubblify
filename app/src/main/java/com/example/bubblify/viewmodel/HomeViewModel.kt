@@ -11,7 +11,6 @@ import com.example.bubblify.model.Reference
 import com.example.bubblify.service.StorageService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,8 +43,7 @@ constructor(
         viewModelScope.launch {
 
             try {
-                var groups = storageService.getGroups()
-                Log.d("beforeCreation", groups?.size.toString())
+                val groups = storageService.getGroups()
 
                 var groupName = "New Group"
                 var count = 0
@@ -57,13 +55,8 @@ constructor(
                 }
 
                 val group = Group(groupName, 4294902000)
-                Log.d("name", group.name)
+
                 val groupCreated = storageService.createGroup(group)
-
-                Log.d("groupCreated", groupCreated?.get()?.await().toString())
-
-                groups = storageService.getGroups()
-                Log.d("afterCreation", groups?.size.toString())
 
             } catch (e: Exception) {
                 Log.d("error", e.message.toString())

@@ -120,7 +120,9 @@ fun AddMembersPage(
                             username = user.data.username,
                             onConfirm = {
                                 // Handle OK button action
-                                //viewModel.addMemberToGroup(user.reference, )
+                                if (groupId != null) {
+                                    viewModel.addMemberToGroup(user.reference, groupId)
+                                }
                                 selectedUser = null
                             },
                             onCancel = {

@@ -32,6 +32,7 @@ constructor(
             try {
                 val value = storageService.getAllUsersFromGroup(groupReferenceString)
                 _users.value = value.sortedBy { it.data.username }
+                Log.d("t", value.size.toString())
             } catch (e: Exception) {
                 // If there is an error, log it
                 Log.e("GroupSettingsViewModel", "fetchUsers: ${e.message}")

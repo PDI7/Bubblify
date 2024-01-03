@@ -213,8 +213,10 @@ constructor(
 
     suspend fun addUserToGroup(
         userReference: DocumentReference,
-        groupReference: DocumentReference
+        groupReferenceString: String
     ): DocumentReference {
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
         val userGroup = UserGroup(userReference, groupReference, null, UserGroupState.INVITED)
         return firestore.collection(USER_GROUP_COLLECTION).add(userGroup).await()
     }
