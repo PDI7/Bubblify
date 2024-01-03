@@ -71,6 +71,14 @@ class StorageServiceTest {
     }
 
     @Test
+    fun getAllUsersFromGroup() = runTest {
+        //
+        val users = storageService.getAllUsersFromGroup("PeUMRcsjAhi0qGtYWeU0")
+
+        assertNotNull(users)
+    }
+
+    @Test
     fun createDeleteUser() = runTest {
         // Arrange
         val randomId = Util.autoId()

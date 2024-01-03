@@ -20,19 +20,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.bubblify.MainState
 import com.example.bubblify.R
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.ProfileViewModel
@@ -40,7 +39,10 @@ import com.example.bubblify.viewmodel.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfilePage(profileViewModel: ProfileViewModel, navController: NavController) {
+fun ProfilePage(
+    mainState: MainState,
+    profileViewModel: ProfileViewModel = hiltViewModel()
+) {
 
     //screen
     Box(
@@ -112,16 +114,8 @@ fun ProfilePage(profileViewModel: ProfileViewModel, navController: NavController
                 .requiredHeight(height = 50.dp))
 
         //navigation bar
-        NavigationBar(navController = navController)
+        NavigationBar(mainState.navController)
 
     }
 
-}
-
-
-
-@Preview(widthDp = 360, heightDp = 640)
-@Composable
-fun ProfilePagePreview() {
-    ProfilePage(ProfileViewModel(), rememberNavController())
 }

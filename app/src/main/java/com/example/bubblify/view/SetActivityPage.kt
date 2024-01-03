@@ -1,4 +1,5 @@
 package com.example.bubblify.view
+
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.bubblify.viewmodel.SetActivityViewModel
@@ -32,12 +34,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.bubblify.model.ActivityIcon
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.bubblify.MainState
 import com.example.bubblify.view.common.NavigationBar
+import com.example.bubblify.viewmodel.SetActivityViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SetActivityPage(setActivityViewModel: SetActivityViewModel, navController: NavController) {
+fun SetActivityPage(
+    mainState: MainState,
+    setActivityViewModel: SetActivityViewModel = hiltViewModel()
+) {
 
     Box(
         Modifier
@@ -52,7 +60,7 @@ fun SetActivityPage(setActivityViewModel: SetActivityViewModel, navController: N
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { navController.navigate("bubbleMain") }) {
+                IconButton(onClick = { mainState.navigate("bubbleMain") }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"
@@ -77,15 +85,6 @@ fun SetActivityPage(setActivityViewModel: SetActivityViewModel, navController: N
             }
         })
 
-        NavigationBar(navController = navController)
+        NavigationBar(mainState.navController)
     }
 }
-
-/*
-
-@Preview(widthDp = 360, heightDp = 640)
-@Composable
-fun SetActivityPreview() {
-    SetActivityPage(setActivityViewModel = SetActivityViewModel())
-}
-*/

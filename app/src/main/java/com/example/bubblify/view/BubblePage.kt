@@ -10,12 +10,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
@@ -25,14 +23,11 @@ import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,25 +41,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.SavedStateHandle
-import androidx.navigation.NavHostController
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.bubblify.MainState
 import com.example.bubblify.R
 import com.example.bubblify.model.Activity
-import com.example.bubblify.model.ActivityIcon
 import com.example.bubblify.ui.theme.Purple40
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.BubbleViewModel
-import com.example.bubblify.viewmodel.SharedHomeBubbleViewModel
+import com.example.bubblify.viewmodel.state.GroupState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostController, sharedHomeBubbleViewModel: SharedHomeBubbleViewModel, groupId: String?) {
+fun BubblePage(
+    mainState: MainState,
+    groupState: GroupState,
+    groupId: String?,
+    bubbleViewModel: BubbleViewModel = hiltViewModel(),
+) {
 
     // Add the listener
     val activityList by bubbleViewModel.activities.observeAsState(null)
@@ -72,7 +70,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 
     // Get the data before starting the UI
     LaunchedEffect(Unit) {
-        if(groupId != null)
+        if (groupId != null)
             bubbleViewModel.fetchActivities(groupId)
         else
             Log.d("Bonsoir non", groupId.toString())
@@ -87,7 +85,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 
         CenterAlignedTopAppBar(
             navigationIcon = {
-                IconButton(onClick = { navController.navigate("home") }) {
+                IconButton(onClick = { mainState.navigate("home") }) {
                     Icon(
                         imageVector = Icons.Outlined.ArrowBack,
                         contentDescription = "ArrowBack"
@@ -95,9 +93,9 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
                 }
             },
             modifier = Modifier.align(Alignment.TopCenter),
-            title = { sharedHomeBubbleViewModel.group?.let { Text(it.name, maxLines = 1) } },
+            title = { groupState.group?.let { Text(it.name, maxLines = 1) } },
             actions = {
-                IconButton(onClick = { /* Open Edit Popup */ }) {
+                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") }) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
                         contentDescription = "Edit"
@@ -123,7 +121,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
         }
 
         FilledTonalButton(
-            onClick = { navController.navigate("setActivity") },
+            onClick = { mainState.navigate("setActivity") },
             modifier = Modifier
                 .padding(bottom = 120.dp)
                 .align(alignment = Alignment.BottomCenter)
@@ -133,7 +131,7 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
             Text("+ Set my activity")
         }
 
-        NavigationBar(navController = navController)
+        NavigationBar(mainState.navController)
     }
 
 }
@@ -142,10 +140,12 @@ fun BubblePage(bubbleViewModel: BubbleViewModel, navController: NavHostControlle
 fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity, onBubbleClick: () -> Unit) {
     var isDialogOpen by remember { mutableStateOf(false) }
 
-    Button(onClick = { isDialogOpen = !isDialogOpen },
+    Button(
+        onClick = { isDialogOpen = !isDialogOpen },
         modifier = Modifier
             .padding(5.dp)
-            .size(bubbleSize)) {
+            .size(bubbleSize)
+    ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -179,7 +179,7 @@ fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity, onBubbleClick: () -> Uni
 
     if (isDialogOpen) {
         // If the card is open, display the ElevatedCard
-        MinimalDialog(activity = activity, onDismissRequest = { isDialogOpen = false },)
+        MinimalDialog(activity = activity, onDismissRequest = { isDialogOpen = false })
     }
 }
 
@@ -238,11 +238,3 @@ fun MinimalDialog(activity: Activity, onDismissRequest: () -> Unit) {
         }
     }
 }
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun BubblePagePreview(){
-    BubblePage(BubbleViewModel(), rememberNavController())
-}
-*/
