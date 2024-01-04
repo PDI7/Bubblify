@@ -70,6 +70,7 @@ constructor(
                     storageService.addActivityToGroup(defaultActivity, groupCreated.id)
                 }
 
+                fetchGroups()
             } catch (e: Exception) {
                 Log.d("error", e.message.toString())
             }
