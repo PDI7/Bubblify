@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -73,7 +74,8 @@ fun AddActivitiesPage(
     ) {
         CenterAlignedTopAppBar(
             navigationIcon = {
-                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") }) {
+                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") },
+                    modifier = Modifier.testTag("navigationBack")) {
                     Icon(
                         imageVector = Icons.Outlined.ArrowBack,
                         contentDescription = "ArrowBack"
@@ -126,6 +128,7 @@ fun AddActivitiesPage(
                                     selectedActivity = activity
                                 }
                                 .padding(8.dp)
+                                .testTag("AddActivityIcon")
                         )
                     }
 
