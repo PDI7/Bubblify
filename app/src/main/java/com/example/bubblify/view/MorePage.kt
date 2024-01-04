@@ -44,7 +44,7 @@ fun MorePage(
         CenterAlignedTopAppBar(
             title = { Text("More", maxLines = 1) },
             navigationIcon = {
-                IconButton(onClick = { /* do something */ }) {
+                IconButton(onClick = { mainState.navigate("home") }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"
