@@ -30,6 +30,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -107,7 +108,8 @@ fun HomePage(
                     )
                     .padding(16.dp, 0.dp)
                     .requiredWidth(width = 285.dp)
-                    .requiredHeight(height = 60.dp),
+                    .requiredHeight(height = 60.dp)
+                    .then(Modifier.testTag("addGroupButton")),
                 border = BorderStroke(1.dp, Color.Black),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 10.dp
@@ -144,7 +146,8 @@ fun GroupItem(
                 x = 38.dp,
             )
             .requiredWidth(width = 285.dp)
-            .requiredHeight(height = 60.dp),
+            .requiredHeight(height = 60.dp)
+            .then(Modifier.testTag("groupButton")),
         border = BorderStroke(1.dp, Color.Black),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 10.dp
