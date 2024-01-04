@@ -18,6 +18,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -29,12 +30,18 @@ fun BasicField(
     value: String,
     onNewValue: (String) -> Unit,
     modifier: Modifier = Modifier,
-    errorMessage: String = ""
+    errorMessage: String = "",
+    errorModifier: Modifier = Modifier
 ) {
     OutlinedTextField(
         label = { Text(label) },
         isError = errorMessage.isNotEmpty(),
-        supportingText = { if (errorMessage.isNotEmpty()) Text(errorMessage) },
+        supportingText = {
+            if (errorMessage.isNotEmpty()) Text(
+                errorMessage,
+                modifier = errorModifier
+            )
+        },
         singleLine = true,
         modifier = modifier,
         value = value,
@@ -44,13 +51,23 @@ fun BasicField(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier, errorMessage: String = "") {
+fun EmailField(
+    value: String,
+    onNewValue: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    errorMessage: String = ""
+) {
     OutlinedTextField(
         singleLine = true,
-        modifier = modifier,
+        modifier = modifier.then(Modifier.testTag("emailField")),
         value = value,
         isError = errorMessage.isNotEmpty(),
-        supportingText = { if (errorMessage.isNotEmpty()) Text(errorMessage) },
+        supportingText = {
+            if (errorMessage.isNotEmpty()) Text(
+                errorMessage,
+                modifier.then(Modifier.testTag("emailErrorField"))
+            )
+        },
         label = { Text("Email") },
         onValueChange = { onNewValue(it) },
         colors = TextFieldDefaults.textFieldColors(
@@ -62,8 +79,20 @@ fun EmailField(value: String, onNewValue: (String) -> Unit, modifier: Modifier =
 }
 
 @Composable
-fun PasswordField(value: String, onNewValue: (String) -> Unit, modifier: Modifier = Modifier, errorMessage: String = "") {
-    PasswordField(value, "Password", onNewValue, modifier, errorMessage)
+fun PasswordField(
+    value: String,
+    onNewValue: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    errorMessage: String = ""
+) {
+    PasswordField(
+        value,
+        "Password",
+        onNewValue,
+        modifier.then(Modifier.testTag("passwordField")),
+        errorMessage,
+        Modifier.testTag("passwordErrorField")
+    )
 }
 
 @Composable
@@ -73,7 +102,14 @@ fun RepeatPasswordField(
     modifier: Modifier = Modifier,
     errorMessage: String = ""
 ) {
-    PasswordField(value, "Repeat Password", onNewValue, modifier, errorMessage)
+    PasswordField(
+        value,
+        "Repeat Password",
+        onNewValue,
+        modifier.then(Modifier.testTag("repeatPasswordField")),
+        errorMessage,
+        Modifier.testTag("repeatPasswordErrorField")
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +119,8 @@ private fun PasswordField(
     label: String,
     onNewValue: (String) -> Unit,
     modifier: Modifier = Modifier,
-    errorMessage: String = ""
+    errorMessage: String = "",
+    errorModifier: Modifier = Modifier
 ) {
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
@@ -93,7 +130,12 @@ private fun PasswordField(
         label = { Text(label) },
         placeholder = { Text(text = "Enter password here") },
         isError = errorMessage.isNotEmpty(),
-        supportingText = { if (errorMessage.isNotEmpty()) Text(errorMessage) },
+        supportingText = {
+            if (errorMessage.isNotEmpty()) Text(
+                errorMessage,
+                modifier = errorModifier
+            )
+        },
         onValueChange = { onNewValue(it) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         colors = TextFieldDefaults.textFieldColors(

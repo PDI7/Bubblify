@@ -28,7 +28,15 @@ fun BubblifyApp(navController: NavHostController = rememberNavController()) {
         composable("login") { LoginPage(mainState) }
         composable("signUp") { SignUpPage(mainState) }
         composable("more") { MorePage(mainState) }
-        composable("setActivity") { SetActivityPage(mainState) }
+        composable(
+            "setActivity/{groupId}",
+            arguments = listOf(navArgument("groupId") { type = NavType.StringType })
+
+        ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getString("groupId")
+            SetActivityPage(mainState, groupId)
+
+        }
         composable("home") {
             HomePage(
                 mainState,

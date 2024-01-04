@@ -12,6 +12,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bubblify.MainState
 import com.example.bubblify.view.common.BasicField
@@ -56,8 +57,9 @@ fun SignUpPage(
             "Username",
             uiState.username,
             viewModel::onUsernameChange,
-            fieldModifier,
-            uiState.usernameValidation
+            fieldModifier.then(Modifier.testTag("usernameField")),
+            uiState.usernameValidation,
+            Modifier.testTag("usernameErrorField")
         )
 
         PasswordField(
@@ -74,9 +76,17 @@ fun SignUpPage(
             uiState.repeatPasswordValidation
         )
 
-        if (uiState.error != null) Text(text = uiState.error!!, color = Color.Red)
+        if (uiState.error != null) Text(
+            text = uiState.error!!,
+            color = Color.Red,
+            modifier = Modifier.testTag("errorText")
+        )
 
-        PrimaryButton(text = "Create Account", modifier = Modifier.basicButton()) {
+        PrimaryButton(
+            text = "Create Account", modifier = Modifier
+                .basicButton()
+                .then(Modifier.testTag("createAccountButton"))
+        ) {
             viewModel.onSignUpClick(openAndPopUp = { route, popUp ->
                 mainState.navigateAndPopUp(
                     route,
@@ -85,7 +95,11 @@ fun SignUpPage(
             })
         }
 
-        SecondaryButton(text = "Sign In", modifier = Modifier.basicButton()) {
+        SecondaryButton(
+            text = "Sign In", modifier = Modifier
+                .basicButton()
+                .then(Modifier.testTag("signInButton"))
+        ) {
             mainState.navigate("login")
         }
     }

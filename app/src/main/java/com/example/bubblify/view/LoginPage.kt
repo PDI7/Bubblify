@@ -8,6 +8,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,6 +36,12 @@ fun LoginPage(
 
     val fieldModifier = Modifier.fieldModifier()
 
+    LaunchedEffect(Unit) {
+        // Check if user is already logged in
+        if (viewModel.isAlreadyLoggedIn())
+            mainState.navigate("home")
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -45,13 +52,18 @@ fun LoginPage(
     ) {
         Title(text = "Login", Modifier.titleModifier())
 
-        EmailField(uiState.email, viewModel::onEmailChange, fieldModifier.then(Modifier.testTag("emailField")))
+        EmailField(uiState.email, viewModel::onEmailChange, fieldModifier)
 
-        PasswordField(uiState.password, viewModel::onPasswordChange, fieldModifier.then(Modifier.testTag("passwordField")))
+        PasswordField(uiState.password, viewModel::onPasswordChange, fieldModifier)
 
         if (uiState.error != null) Text(text = uiState.error!!, color = Color.Red)
 
-        PrimaryButton(text = "Login", modifier = Modifier.basicButton().then(Modifier.testTag("loginButton"))) {
+        PrimaryButton(
+            text = "Login",
+            modifier = Modifier
+                .basicButton()
+                .then(Modifier.testTag("loginButton"))
+        ) {
             viewModel.onLogInClick(openAndPopUp = { route, popUp ->
                 mainState.navigateAndPopUp(
                     route,
@@ -60,7 +72,12 @@ fun LoginPage(
             })
         }
 
-        SecondaryButton(text = "Sign up",  modifier = Modifier.basicButton().then(Modifier.testTag("singupbutton"))) {
+        SecondaryButton(
+            text = "Sign up",
+            modifier = Modifier
+                .basicButton()
+                .then(Modifier.testTag("signUpButton"))
+        ) {
             mainState.navigate("signUp")
         }
     }
