@@ -3,7 +3,7 @@
 ## Introduction
 
 Bubblify is an app that allows user to privately connect with their loved-ones through sharing an activtiy and interacting with a bubble chart-type of interface.
-Users are able to be part of several groups that represent their social circles and share their everyday happ
+Users are able to be part of several groups that represent their social circles and share their everyday happenings in a closed member group, without making every private detail known to the rest of the world.
 
 ## Architecture Overview (optional)
 
