@@ -2,10 +2,8 @@
 
 ## Introduction
 
-TODO: Add brief introduction.
-
-TODO: Add image that helps to understand the project.
-This could be an architectural diagram or a screenshot of the application.
+Bubblify is an app that allows user to privately connect with their loved-ones through sharing an activtiy and interacting with a bubble chart-type of interface.
+Users are able to be part of several groups that represent their social circles and share their everyday happ
 
 ## Architecture Overview (optional)
 
