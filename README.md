@@ -9,7 +9,124 @@ This could be an architectural diagram or a screenshot of the application.
 
 ## Architecture Overview (optional)
 
-TODO: Add simple diagram that explains the architecture.
+```mermaid
+graph TD
+  subgraph bubblify
+    subgraph common
+      StringExt.kt
+    end
+
+    subgraph data
+    end
+
+    subgraph model
+      Activity.kt
+      ActivityIcon.kt
+      Group.kt
+      Reference.kt
+      Resource.kt
+      User.kt
+      UserGroup.kt
+      UserGroupState.kt
+    end
+
+    subgraph service
+      AccountService.kt
+      StorageService.kt
+      subgraph modul
+        FirebaseModule.kt
+        ServiceModule.kt
+      end
+    end
+
+    subgraph ui
+      subgraph theme
+        Color.kt
+        Theme.kt
+        Type.kt
+      end
+
+      subgraph view
+        AddActivitiesPage.kt
+        AddMembersPage.kt
+        BubblePage.kt
+        GroupSettingsPage.kt
+        HomePage.kt
+        LoginPage.kt
+        MorePage.kt
+        ProfilePage.kt
+        SetActivityPage.kt
+        SignUpPage.kt
+
+        
+
+        subgraph common
+          ButtonComposable.kt
+          ModifierExt.kt
+          NavigationComposable.kt
+          TextFieldComposable.kt
+          TitleComposable.kt
+        end
+      end
+    end
+
+    subgraph viewmodel
+      AddActivitiesViewModel.kt
+      AddMembersViewModel.kt
+      BubbleViewModel.kt
+      GroupSettingsViewModel.kt
+      HomeViewModel.kt
+      LoginViewModel.kt
+      MoreViewModel.kt
+      ProfileViewModel.kt
+      SetActivityViewModel.kt
+      SignUpViewModel.kt
+
+      subgraph state
+        GroupState.kt
+        LoginUiState.kt
+        SignUpUiState.kt
+      end
+    end
+
+    subgraph links
+      BubblifyApp.kt
+      BubblifyHiltApp.kt
+      MainActivity.kt
+      MainState.kt
+
+      StorageService.kt --> AddActivitiesViewModel.kt
+      StorageService.kt --> AddMembersViewModel.kt
+      StorageService.kt --> BubbleViewModel.kt
+      StorageService.kt --> GroupSettingsViewModel.kt
+      StorageService.kt --> HomeViewModel.kt
+      StorageService.kt --> LoginViewModel.kt
+      StorageService.kt --> MoreViewModel.kt
+      StorageService.kt --> ProfileViewModel.kt
+      StorageService.kt --> SetActivityViewModel.kt
+      StorageService.kt --> SignUpViewModel.kt
+      AccountService.kt -->|uses| StorageService.kt
+      AddActivitiesPage.kt -->|uses| AddActivitiesViewModel.kt
+        AddMembersPage.kt -->|uses| AddMembersViewModel.kt
+        BubblePage.kt -->|uses| BubbleViewModel.kt
+        GroupSettingsPage.kt -->|uses| GroupSettingsViewModel.kt
+        HomePage.kt -->|uses| HomeViewModel.kt
+        LoginPage.kt -->|uses| LoginViewModel.kt
+        MorePage.kt -->|uses| MoreViewModel.kt
+        ProfilePage.kt -->|uses| ProfileViewModel.kt
+        SetActivityPage.kt -->|uses| SetActivityViewModel.kt
+        SignUpPage.kt -->|uses| SignUpViewModel.kt
+    end
+    
+  end
+  subgraph firebase
+    FirebaseDatabase
+  end
+  FirebaseModule.kt -->|connects to| FirebaseDatabase
+  FirebaseModule.kt -->|provides| AccountService.kt
+  FirebaseModule.kt -->|provides| StorageService.kt
+
+```
 ### Folder Structure
 Folder structure of the project
 ```
