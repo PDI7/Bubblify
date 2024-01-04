@@ -145,7 +145,7 @@ constructor(
         )
     }
 
-    private suspend fun getUsersExceptInGroup(groupReferenceString: String): List<Reference<User>> {
+    suspend fun getUsersExceptInGroup(groupReferenceString: String): List<Reference<User>> {
         val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
 
         val userGroups = firestore.collection(USER_GROUP_COLLECTION)
@@ -173,7 +173,7 @@ constructor(
         return result
     }
 
-    private fun filterUsers(
+    fun filterUsers(
         users: List<Reference<User>>,
         querySearch: String
     ): List<Reference<User>> {
