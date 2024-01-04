@@ -49,6 +49,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -105,7 +106,9 @@ fun BubblePage(
                     )
                 }
             },
-            modifier = Modifier.align(Alignment.TopCenter),
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .testTag("topAppBar"),
             title = { groupState.group?.let {
                 Text(
                     it.name,
@@ -114,7 +117,8 @@ fun BubblePage(
                 )
             } },
             actions = {
-                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") }) {
+                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") },
+                    modifier = Modifier.testTag("editButton")) {
                     Icon(
                         imageVector = Icons.Outlined.Edit,
                         contentDescription = "Edit"
