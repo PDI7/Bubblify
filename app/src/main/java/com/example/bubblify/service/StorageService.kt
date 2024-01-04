@@ -84,7 +84,7 @@ constructor(
         return groups
     }
 
-    suspend fun getAllUsersFromGroup(groupReferenceString: String) : List<Reference<User>> {
+    suspend fun getAllUsersFromGroup(groupReferenceString: String): List<Reference<User>> {
         val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
 
         val userGroups = firestore.collection(USER_GROUP_COLLECTION)
@@ -172,13 +172,19 @@ constructor(
         return result
     }
 
-    private fun filterUsers(users: List<Reference<User>>, querySearch: String): List<Reference<User>> {
+    private fun filterUsers(
+        users: List<Reference<User>>,
+        querySearch: String
+    ): List<Reference<User>> {
         return users.filter { user ->
             user.data.username.contains(querySearch, ignoreCase = true)
         }
     }
 
-    suspend fun getUsersFromSearch(querySearch: String, groupReferenceString: String): List<Reference<User>>? {
+    suspend fun getUsersFromSearch(
+        querySearch: String,
+        groupReferenceString: String
+    ): List<Reference<User>>? {
         val allUsers = getUsersExceptInGroup(groupReferenceString) ?: return null
         return filterUsers(allUsers, querySearch)
     }
@@ -189,6 +195,14 @@ constructor(
 
     suspend fun deleteUser(userId: String) {
         firestore.collection(USER_COLLECTION).document(userId).delete().await()
+    }
+
+    suspend fun doesUsernameExist(username: String): Boolean {
+        println("Weeeeeeeeee4")
+        val users =
+            firestore.collection(USER_COLLECTION).whereEqualTo(USER_NAME_FIELD, username).get()
+                .await()
+        return users.documents.isNotEmpty()
     }
 
     //===============================================================//
@@ -274,14 +288,15 @@ constructor(
     companion object {
         // Fields
         const val USER_ID_FIELD = "userId"
+        const val USER_NAME_FIELD = "username"
         const val GROUP_ID_FIELD = "groupId"
         const val USER_GROUP_STATE_FIELD = "state"
         const val ACTIVITY_ID_FIELD = "activityId"
 
         // Collection/Documents Constants
-         const val USER_GROUP_COLLECTION = "UsersGroups"
-         const val GROUP_COLLECTION = "Groups"
-         const val USER_COLLECTION = "Users"
-         const val ACTIVITY_COLLECTION = "Activities"
+        const val USER_GROUP_COLLECTION = "UsersGroups"
+        const val GROUP_COLLECTION = "Groups"
+        const val USER_COLLECTION = "Users"
+        const val ACTIVITY_COLLECTION = "Activities"
     }
 }

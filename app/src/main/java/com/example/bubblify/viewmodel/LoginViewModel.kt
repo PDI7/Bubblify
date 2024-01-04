@@ -9,11 +9,7 @@ import com.example.bubblify.model.Resource
 import com.example.bubblify.service.AccountService
 import com.example.bubblify.viewmodel.state.LoginUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -43,6 +39,10 @@ constructor(
 
     fun onLogInClick(openAndPopUp: (String, String) -> Unit) {
         loginUser(openAndPopUp, email = email, password = password)
+    }
+
+    fun isAlreadyLoggedIn(): Boolean {
+        return accountService.hasUser
     }
 
     private fun loginUser(

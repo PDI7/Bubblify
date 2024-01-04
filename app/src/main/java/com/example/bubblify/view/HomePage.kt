@@ -136,7 +136,7 @@ fun GroupItem(
 ) {
     FilledTonalButton(
         onClick = {
-            groupState.addGroup(group)
+            groupState.addGroup(group, groupId)
             navController.navigate("bubbleMain/$groupId")
         },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),

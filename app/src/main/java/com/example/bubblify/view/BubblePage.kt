@@ -127,7 +127,7 @@ fun BubblePage(
         }
 
         FilledTonalButton(
-            onClick = { mainState.navigate("setActivity") },
+            onClick = { mainState.navigate("setActivity/$groupId") },
             modifier = Modifier
                 .padding(bottom = 120.dp)
                 .align(alignment = Alignment.BottomCenter)

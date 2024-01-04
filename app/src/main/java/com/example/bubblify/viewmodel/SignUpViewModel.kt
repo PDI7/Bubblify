@@ -15,9 +15,6 @@ import com.example.bubblify.service.AccountService
 import com.example.bubblify.service.StorageService
 import com.example.bubblify.viewmodel.state.SignUpUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,9 +27,6 @@ constructor(
     private val accountService: AccountService,
     private val storageService: StorageService
 ) : AndroidViewModel(application = application) {
-
-    private var _registerState = MutableStateFlow(value = SignUpUiState())
-    val registerState: StateFlow<SignUpUiState> = _registerState.asStateFlow()
 
     var uiState = mutableStateOf(SignUpUiState())
         private set
@@ -51,6 +45,18 @@ constructor(
     }
 
     fun onUsernameChange(newValue: String) {
+        uiState.value = uiState.value.copy(usernameValidation = "")
+        if (newValue.isValidUsername()) {
+            viewModelScope.launch {
+                if (storageService.doesUsernameExist(newValue)) {
+                    uiState.value = uiState.value.copy(
+                        usernameValidation = "The username $newValue is already taken."
+                    )
+                }
+            }
+
+
+        }
         uiState.value = uiState.value.copy(username = newValue)
     }
 
@@ -64,7 +70,6 @@ constructor(
 
     fun onSignUpClick(openAndPopUp: (String, String) -> Unit) {
         uiState.value = uiState.value.copy(emailValidation = "")
-        uiState.value = uiState.value.copy(usernameValidation = "")
         uiState.value = uiState.value.copy(passwordValidation = "")
         uiState.value = uiState.value.copy(repeatPasswordValidation = "")
         var isValid = true
@@ -96,7 +101,7 @@ constructor(
             isValid = false
         }
 
-        if (isValid) registerUser(openAndPopUp = openAndPopUp)
+        if (isValid && uiState.value.usernameValidation == "") registerUser(openAndPopUp = openAndPopUp)
     }
 
 
