@@ -1,20 +1,27 @@
 package com.example.bubblify.view
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +30,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -50,9 +58,10 @@ fun HomePage(
         homeViewModel.fetchGroups()
     }
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
 
         CenterAlignedTopAppBar(
@@ -69,7 +78,11 @@ fun HomePage(
 
         if (groups == null) {
             // Waiting for the data (and avoid app crash)
-            Text(text = "Loading...")
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally),
+                color = MaterialTheme.colorScheme.secondary
+            )
         } else {
             // Display the list of groups
             groups!!.forEach { group ->
@@ -78,14 +91,10 @@ fun HomePage(
                     group = group.data,
                     groupId = group.reference.id,
                     navController = mainState.navController,
-                    modifier = Modifier
-                        .align(alignment = Alignment.TopStart)
-                        .offset(
-                            x = 38.dp,
-                            y = 137.dp + (groups!!.indexOf(group) * 81).dp // Adapt the position to the number of groups
-                        ),
                 )
+                Spacer(modifier = Modifier.height(8.dp))
             }
+
             // Display an empty button to add a new group
             FilledTonalButton(
                 onClick = {
@@ -94,13 +103,13 @@ fun HomePage(
                 },
                 colors = ButtonDefaults.filledTonalButtonColors(Color.White),
                 modifier = Modifier
-                    .align(alignment = Alignment.TopStart)
                     .offset(
-                        x = 38.dp,
-                        y = 137.dp + (groups!!.size * 81).dp // Adapt the position to the number of groups
+                        x = 23.dp
                     )
+                    .padding(16.dp, 0.dp)
                     .requiredWidth(width = 285.dp)
-                    .requiredHeight(height = 60.dp),
+                    .requiredHeight(height = 60.dp)
+                    .then(Modifier.testTag("addGroupButton")),
                 border = BorderStroke(1.dp, Color.Black),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 10.dp
@@ -109,9 +118,11 @@ fun HomePage(
             ) {
                 Text("+")
             }
+            Spacer(modifier = Modifier.height(100.dp))
         }
-        NavigationBar(mainState.navController)
+
     }
+    NavigationBar(mainState.navController)
 }
 
 // Group Button
@@ -125,13 +136,18 @@ fun GroupItem(
 ) {
     FilledTonalButton(
         onClick = {
-            groupState.addGroup(group, groupId)
+            groupState.addGroup(group)
             navController.navigate("bubbleMain/$groupId")
         },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
-        modifier = modifier
+
+        modifier = Modifier
+            .offset(
+                x = 38.dp,
+            )
             .requiredWidth(width = 285.dp)
-            .requiredHeight(height = 60.dp),
+            .requiredHeight(height = 60.dp)
+            .then(Modifier.testTag("groupButton")),
         border = BorderStroke(1.dp, Color.Black),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 10.dp

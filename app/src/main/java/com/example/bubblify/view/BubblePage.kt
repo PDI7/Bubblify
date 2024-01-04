@@ -28,10 +28,12 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -58,13 +60,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import com.example.bubblify.MainState
 import com.example.bubblify.R
 import com.example.bubblify.model.Activity
+import com.example.bubblify.model.Reference
+import com.example.bubblify.model.UserGroup
 import com.example.bubblify.ui.theme.Purple40
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.BubbleViewModel
 import com.example.bubblify.viewmodel.state.GroupState
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,16 +85,21 @@ fun BubblePage(
 
     // Add the listener
     val activityList by bubbleViewModel.activities.observeAsState(null)
+    val usersList by bubbleViewModel.users.observeAsState(null)
     val home = listOf(200.dp, 150.dp, 180.dp, 200.dp, 150.dp)
     var changeName by remember { mutableStateOf(false) }
     var newName by remember { mutableStateOf(TextFieldValue("")) }
 
     // Get the data before starting the UI
     LaunchedEffect(Unit) {
-        if (groupId != null)
+        if (groupId != null){
             bubbleViewModel.fetchActivities(groupId)
+            bubbleViewModel.fetchUsers(groupId)
+        }
         else
             Log.d("Bonsoir non", groupId.toString())
+
+
     }
 
     var selectedActivity by remember { mutableStateOf<Activity?>(null) }
@@ -128,7 +140,11 @@ fun BubblePage(
         )
         if (activityList == null) {
             // Waiting for the data (and avoid app crash)
-            Text(text = "Loading...")
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .align(Alignment.Center),
+                color = MaterialTheme.colorScheme.secondary
+            )
         } else {
             LazyVerticalGrid(
                 modifier = Modifier
@@ -136,8 +152,8 @@ fun BubblePage(
                     .padding(top = 70.dp),
                 columns = GridCells.Fixed(3), content = {
                     items(activityList!!.size) { index ->
-                        Bubble(home[index], activityList!![index]) {
-                            selectedActivity = activityList!![index]
+                        Bubble(home[index], activityList!![index], bubbleViewModel) {
+                            selectedActivity = activityList!![index].data
                         }
                     }
                 })
@@ -188,54 +204,60 @@ fun BubblePage(
 }
 
 @Composable
-fun Bubble(bubbleSize: Dp = 200.dp, activity: Activity, onBubbleClick: () -> Unit) {
-    var isDialogOpen by remember { mutableStateOf(false) }
+fun Bubble(bubbleSize: Dp = 200.dp, activity: Reference<Activity>, bubbleViewModel: BubbleViewModel, onBubbleClick: () -> Unit) {
 
-    Button(
-        onClick = { isDialogOpen = !isDialogOpen },
-        modifier = Modifier
-            .padding(5.dp)
-            .size(bubbleSize)
-    ) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+    var isDialogOpen by remember { mutableStateOf(false) }
+    val activityUserList = bubbleViewModel.usersByActivity[activity.reference.id]
+
+    // Launch only one time to avoid looping
+    LaunchedEffect(activity.reference) {
+        bubbleViewModel.filterUsers(activity.reference)
+    }
+
+    if(activityUserList != null){
+        Button(
+
+            onClick = { isDialogOpen = !isDialogOpen },
+            modifier = Modifier
+                .padding(5.dp)
+                .size(bubbleSize)
         ) {
-            for (i in 0..1) {
-                Row(
-                    modifier = Modifier.weight(2.5f),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    for (i in 0..2) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                activityUserList!!.forEach { thisUser ->
+                    if(activity.reference.id == thisUser.data.activityId!!.id)
                         Image(
-                            painter = painterResource(id = R.drawable.profilepic),
+                            painter = painterResource(id = R.drawable.baseline_account_circle_24),
                             contentDescription = "",
                             modifier = Modifier
                                 .weight(1f)
                                 .clip(CircleShape)
-                                .padding(end = 3.dp)
+                                .padding(end = 1.dp)
                         )
-                    }
                 }
-            }
-            Image(
-                painter = painterResource(id = activity.icon!!.icon),
-                contentDescription = "",
-                modifier = Modifier.weight(1f),
-            )
+                Image(
+                    painter = painterResource(id = activity.data.icon!!.icon),
+                    contentDescription = "",
+                    modifier = Modifier.weight(1f),
+                )
+        }
+        }
+
+        if (isDialogOpen) {
+            // If the card is open, display the ElevatedCard
+            MinimalDialog(activityUserList ,activity = activity, onDismissRequest = { isDialogOpen = false })
         }
     }
-
-    if (isDialogOpen) {
-        // If the card is open, display the ElevatedCard
-        MinimalDialog(activity = activity, onDismissRequest = { isDialogOpen = false })
+    else {
+        Text("Loading")
     }
 }
 
 @Composable
-fun MinimalDialog(activity: Activity, onDismissRequest: () -> Unit) {
+fun MinimalDialog(activityUserList: List<Reference<UserGroup>>,activity: Reference<Activity>, onDismissRequest: () -> Unit) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -256,21 +278,22 @@ fun MinimalDialog(activity: Activity, onDismissRequest: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    for (i in 0..4) {
-                        Image(
-                            painter = painterResource(id = R.drawable.profilepic),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .weight(1f)
-                                .clip(CircleShape)
-                                .padding(end = 3.dp)
-                        )
+                    activityUserList!!.forEach { thisUser ->
+                        if(activity.reference.id == thisUser.data.activityId!!.id)
+                            Image(
+                                painter = painterResource(id = R.drawable.baseline_account_circle_24),
+                                contentDescription = "",
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .clip(CircleShape)
+                                    .padding(end = 1.dp)
+                            )
                     }
                 }
                 Row(
                 ) {
                     Image(
-                        painter = painterResource(id = activity.icon!!.icon),
+                        painter = painterResource(id = activity.data.icon!!.icon),
                         contentDescription = "",
                         modifier = Modifier
                             .weight(2f)
@@ -278,7 +301,7 @@ fun MinimalDialog(activity: Activity, onDismissRequest: () -> Unit) {
                             .padding(bottom = 20.dp)
                     )
                     Text(
-                        text = activity.name,
+                        text = activity.data.name,
                         color = Color(0xFFF4ECFF),
                         fontSize = 30.sp,
                         modifier = Modifier

@@ -4,14 +4,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -22,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -43,7 +39,8 @@ fun NavigationBar(navController : NavController) {
                 onClick = {
                     selectedItem = 0
                     navController.navigate("home")
-                }
+                },
+                modifier = Modifier.testTag("homeButton")
             )
             NavigationBarItem(
                 icon = { Icon(Icons.Filled.AccountCircle, contentDescription = "Profile") },
@@ -52,7 +49,8 @@ fun NavigationBar(navController : NavController) {
                 onClick = {
                     selectedItem = 1
                     navController.navigate("profile")
-                }
+                },
+                modifier = Modifier.testTag("profileButton")
             )
             NavigationBarItem(
                 icon = { Icon(Icons.Filled.Settings, contentDescription = "More") },
@@ -61,48 +59,9 @@ fun NavigationBar(navController : NavController) {
                 onClick = {
                     selectedItem = 2
                     navController.navigate("more")
-                }
+                },
+                modifier = Modifier.testTag("moreButton")
             )
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BackNavigation(backAction: () -> Unit) {
-    CenterAlignedTopAppBar(
-        title = { Text("Groups", maxLines = 1) },
-        navigationIcon = {
-            IconButton(onClick = backAction) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "get back"
-                )
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BackNavigationWithNotificationIcon(onClickBack: () -> Unit, onClickNotification: () -> Unit) {
-    CenterAlignedTopAppBar(
-        title = { Text("Groups", maxLines = 1) },
-        navigationIcon = {
-            IconButton(onClick = onClickBack) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "get back"
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = onClickNotification) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "Notification"
-                )
-            }
-        }
-    )
 }
