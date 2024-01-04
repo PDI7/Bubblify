@@ -1,12 +1,13 @@
-package com.example.bubblify.view
+package com.example.bubblify.view.common
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bubblify.BubblifyApp
 import com.example.bubblify.MainActivity
 import com.example.bubblify.service.AccountService
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -19,7 +20,7 @@ import org.junit.Test
 import javax.inject.Inject
 
 @HiltAndroidTest
-class ProfilePageKtTest {
+class NavigationComposableKtTest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
@@ -39,36 +40,57 @@ class ProfilePageKtTest {
 
         composeTestRule.activity.setContent {
             navController = rememberNavController()
-            BubblifyApp(navController)
 
-            // Navigate to sign up page
-            navController.navigate("profile")
+            NavHost(navController = navController, startDestination = "home") {
+                composable("home") { /* nothing */ }
+                composable("profile") { /* nothing */ }
+                composable("more") { /* nothing */ }
+            }
+            NavigationBar(navController)
         }
 
     }
 
     @Test
-    fun profilePageComponentsTest() {
+    fun navigationBarComponentsTest() {
         composeTestRule
-            .onNodeWithTag("profileTitle")
+            .onNodeWithTag("homeButton")
             .assertExists()
 
         composeTestRule
-            .onNodeWithTag("profileBackButton")
+            .onNodeWithTag("moreButton")
             .assertExists()
 
         composeTestRule
-            .onNodeWithTag("profilePicture")
+            .onNodeWithTag("profileButton")
             .assertExists()
     }
 
     @Test
-    fun profileBackButtonTest() {
+    fun clickHomeButtonTest() {
         composeTestRule
-            .onNodeWithTag("profileBackButton")
-            .assertExists()
+            .onNodeWithTag("homeButton")
             .performClick()
 
         assertEquals("home", navController.currentDestination?.route)
     }
+
+    @Test
+    fun clickMoreButtonTest() {
+        composeTestRule
+            .onNodeWithTag("moreButton")
+            .performClick()
+
+        assertEquals("more", navController.currentDestination?.route)
+    }
+
+    @Test
+    fun clickProfileButtonTest() {
+        composeTestRule
+            .onNodeWithTag("profileButton")
+            .performClick()
+
+        assertEquals("profile", navController.currentDestination?.route)
+    }
+
 }
