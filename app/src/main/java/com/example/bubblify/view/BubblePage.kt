@@ -1,8 +1,10 @@
 package com.example.bubblify.view
 
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,7 +23,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
@@ -31,6 +35,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,8 +48,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -69,6 +80,8 @@ fun BubblePage(
     // Add the listener
     val activityList by bubbleViewModel.activities.observeAsState(null)
     val home = listOf(200.dp, 150.dp, 180.dp, 200.dp, 150.dp)
+    var changeName by remember { mutableStateOf(false) }
+    var newName by remember { mutableStateOf(TextFieldValue("")) }
 
     // Get the data before starting the UI
     LaunchedEffect(Unit) {
@@ -95,7 +108,13 @@ fun BubblePage(
                 }
             },
             modifier = Modifier.align(Alignment.TopCenter),
-            title = { groupState.group?.let { Text(it.name, maxLines = 1) } },
+            title = { groupState.group?.let {
+                Text(
+                    it.name,
+                    maxLines = 1,
+                    modifier = Modifier.clickable { changeName = true }
+                )
+            } },
             actions = {
                 IconButton(onClick = { mainState.navigate("groupSettings/$groupId") }) {
                     Icon(
@@ -126,15 +145,43 @@ fun BubblePage(
                 })
         }
 
+        if (changeName) {
+            ChangeNameDialog(
+                newName = newName,
+                onNewNameChange = { newName = it },
+                onConfirm = {
+                    // Handle OK button action
+                    if (groupId != null) {
+                        bubbleViewModel.changeGroupName(newName.text, groupState.group!!, groupId)
+                    }
+                    changeName = false
+                    mainState.navigate("home")
+                },
+                onCancel = {
+                    // Handle Cancel button action
+                    changeName = false
+                }
+            )
+        }
+
         FilledTonalButton(
             onClick = { mainState.navigate("setActivity/$groupId") },
             modifier = Modifier
                 .padding(bottom = 120.dp)
                 .align(alignment = Alignment.BottomCenter)
                 .requiredWidth(width = 285.dp)
-                .requiredHeight(height = 60.dp)
+                .requiredHeight(height = 60.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
+            border = BorderStroke(1.dp, Color.Black),
+            elevation = ButtonDefaults.buttonElevation(
+                defaultElevation = 10.dp
+            ),
+            shape = RoundedCornerShape(8.dp)
         ) {
-            Text("+ Set my activity")
+            Text(
+                text = "+ Set my activity",
+                textAlign = TextAlign.Center
+            )
         }
 
         NavigationBar(mainState.navController)
@@ -243,4 +290,60 @@ fun MinimalDialog(activity: Activity, onDismissRequest: () -> Unit) {
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun ChangeNameDialog(
+    newName: TextFieldValue,
+    onNewNameChange: (TextFieldValue) -> Unit,
+    onConfirm: () -> Unit,
+    onCancel: () -> Unit
+) {
+
+    AlertDialog(
+        shape = RoundedCornerShape(0.dp), // Adjust the corner radius as needed
+        containerColor = Color.White,
+        onDismissRequest = onCancel,
+        title = { Text(text = "Change the name") },
+        text = { TextField(
+            value = newName,
+            onValueChange = onNewNameChange,
+            singleLine = true,
+            colors = TextFieldDefaults.textFieldColors(
+                containerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            modifier = Modifier
+                .background(Color.Transparent)
+                .drawBehind {
+                    val borderSide = 2.dp.toPx()
+                    drawLine(
+                        color = Color.LightGray,
+                        start = Offset(0f, size.height),
+                        end = Offset(size.width, size.height),
+                        strokeWidth = borderSide
+                    )
+                }
+                .padding(0.dp)
+        ) },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm,) {
+                Text(
+                    text = "OK",
+                    color = Color(4282692263)
+                )
+            } },
+        dismissButton = {
+            TextButton(
+                onClick = onCancel,) {
+                Text(
+                    text = "Cancel",
+                    color = Color(4282692263)
+                )
+            } },
+        modifier = Modifier.padding(0.dp)
+    )
 }

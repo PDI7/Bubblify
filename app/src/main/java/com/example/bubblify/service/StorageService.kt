@@ -1,5 +1,6 @@
 package com.example.bubblify.service
 
+import android.util.Log
 import com.example.bubblify.model.Activity
 import com.example.bubblify.model.Group
 import com.example.bubblify.model.Reference
@@ -227,16 +228,20 @@ constructor(
 
     suspend fun addUserToGroup(
         userReference: DocumentReference,
-        groupReference: DocumentReference
+        groupReferenceString: String
     ): DocumentReference {
-        val userGroup = UserGroup(userReference, groupReference, null, UserGroupState.INVITED)
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
+        val userGroup = UserGroup(userReference, groupReference, null, UserGroupState.ACCEPTED)
         return firestore.collection(USER_GROUP_COLLECTION).add(userGroup).await()
     }
 
     suspend fun removeUserFromGroup(
         userReference: DocumentReference,
-        groupReference: DocumentReference
+        groupReferenceString: String
     ) {
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
         firestore.collection(USER_GROUP_COLLECTION)
             .whereEqualTo(USER_ID_FIELD, userReference)
             .whereEqualTo(GROUP_ID_FIELD, groupReference)
@@ -250,13 +255,6 @@ constructor(
     //===============================================================//
     //======================== ACTIVITY METHODS =====================//
     //===============================================================//
-    suspend fun createActivity(activity: Activity): DocumentReference {
-        return firestore.collection(ACTIVITY_COLLECTION).add(activity).await()
-    }
-
-    suspend fun deleteActivity(activityReference: DocumentReference?) {
-        activityReference!!.delete().await()
-    }
 
     @Deprecated("Use getActivitiesInGroup instead")
     suspend fun getActivities(groupId: String): List<Activity> {
@@ -267,7 +265,9 @@ constructor(
             .get().await().toObjects<Activity>()
     }
 
-    suspend fun getActivitiesInGroup(groupReference: DocumentReference): List<Reference<Activity>> {
+    suspend fun getActivitiesInGroup(groupReferenceString: String): List<Reference<Activity>> {
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
         return firestore.collection(ACTIVITY_COLLECTION)
             .whereEqualTo(GROUP_ID_FIELD, groupReference)
             .get()
@@ -281,6 +281,22 @@ constructor(
                 )
             }
             .toList()
+    }
+
+    suspend fun addActivityToGroup(activity: Activity, groupReferenceString: String): DocumentReference {
+        var groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+
+        activity.groupId = groupReference
+
+        val result = firestore.collection(ACTIVITY_COLLECTION).add(activity).await()
+
+        Log.d("result", result.toString())
+
+        return result
+    }
+
+    suspend fun removeActivityFromGroup(activityReference: DocumentReference) {
+        activityReference.delete().await()
     }
 
 

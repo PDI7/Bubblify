@@ -1,5 +1,7 @@
 package com.example.bubblify.view
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.PersonAddAlt
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -26,8 +28,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -37,25 +39,33 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bubblify.MainState
-import com.example.bubblify.model.Reference
-import com.example.bubblify.model.User
+import com.example.bubblify.model.Activity
+import com.example.bubblify.ui.theme.Purple40
 import com.example.bubblify.view.common.NavigationBar
-import com.example.bubblify.viewmodel.AddMembersViewModel
+import com.example.bubblify.viewmodel.AddActivitiesViewModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddMembersPage(
+fun AddActivitiesPage(
     mainState: MainState,
     groupId: String?,
-    viewModel: AddMembersViewModel = hiltViewModel()
+    viewModel: AddActivitiesViewModel = hiltViewModel()
 ) {
-    var searchQuery by remember { mutableStateOf(TextFieldValue("")) }
-    val searchResults by viewModel.searchResults.observeAsState(initial = emptyList())
-    var selectedUser by remember { mutableStateOf<Reference<User>?>(null) }
+    val activities by viewModel.activities.observeAsState(initial = emptyList())
+    var selectedActivity by remember { mutableStateOf<Activity?>(null) }
+    var showPopup by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        if (groupId != null) {
+            viewModel.fetchActivities(groupId)
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -71,63 +81,49 @@ fun AddMembersPage(
                 }
             },
             modifier = Modifier.align(Alignment.TopCenter),
-            title = { Text("Add members") }
+            title = { Text("Add activities") }
         )
 
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 56.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
+                .padding(top = 64.dp, start = 16.dp, end = 16.dp, bottom = 16.dp),
         ) {
-            Text(text = "Search to add a member")
-            TextField(
-                value = searchQuery,
-                onValueChange = {
-                    searchQuery = it
-                    if (groupId != null) {
-                        viewModel.searchMembers(searchQuery.text, groupId)
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                placeholder = {
-                    Text(text = "Enter member username")
-                }
-            )
 
             LazyColumn {
-                items(searchResults) { user ->
+                items(activities) { activity ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        Box(
+                        Image(
+                            painter = painterResource(id = activity.icon!!.icon),
+                            contentDescription = "",
+                            colorFilter = ColorFilter.tint(Color.White),
                             modifier = Modifier
                                 .size(40.dp)
                                 .clip(CircleShape)
                                 .border(1.dp, Color.Black, CircleShape)
-                                .padding(end = 12.dp)
-                        ) {  }
+                                .background(Purple40)
+                                .padding(4.dp),
+                        )
 
                         // Display user details
                         Text(
-                            text = user.data.username,
+                            text = activity.name,
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(start = 12.dp)
                         )
 
-
-                        // Add remove icon button
                         Icon(
-                            imageVector = Icons.Default.PersonAddAlt,
-                            contentDescription = "AddMember",
+                            imageVector = Icons.Default.AddCircleOutline,
+                            contentDescription = "AddActivity",
                             tint = Color.Green,
                             modifier = Modifier
                                 .clickable {
-                                    selectedUser = user
+                                    selectedActivity = activity
                                 }
                                 .padding(8.dp)
                         )
@@ -141,23 +137,36 @@ fun AddMembersPage(
                         modifier = Modifier.height(8.dp)
                     )
 
-                    selectedUser?.let { user ->
-                        AddMemberDialog(
-                            username = user.data.username,
+                    selectedActivity?.let { activity ->
+                        AddActivityDialog(
+                            name = activity.name,
                             onConfirm = {
                                 // Handle OK button action
                                 if (groupId != null) {
-                                    viewModel.addMemberToGroup(user.reference, groupId)
+                                    viewModel.addActivityToGroup(activity, groupId) { result ->
+                                        if (result != null) {
+                                            mainState.navigate("groupSettings/$groupId")
+                                        } else {
+                                            showPopup = true
+                                        }
+                                    }
                                 }
-                                selectedUser = null
-                                mainState.navigate("groupSettings/$groupId")
+                                selectedActivity = null
                             },
                             onCancel = {
                                 // Handle Cancel button action
-                                selectedUser = null
+                                selectedActivity = null
                             }
                         )
                     }
+                }
+            }
+            if (showPopup) {
+                PopupActivityError("Too many activities (max 5) !")
+
+                LaunchedEffect(Unit) {
+                    delay(5000) // Delay for 5 seconds
+                    showPopup = false
                 }
             }
         }
@@ -166,16 +175,16 @@ fun AddMembersPage(
 }
 
 @Composable
-fun AddMemberDialog(username: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
+fun AddActivityDialog(name: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
 
     AlertDialog(
         shape = RoundedCornerShape(0.dp), // Adjust the corner radius as needed
         containerColor = Color.White,
         onDismissRequest = onCancel,
-        title = { Text(username) },
+        title = { Text(name) },
         text = { Text(
-            text = "Do you want to add this user?",
-            ) },
+            text = "Do you want to add this activity?",
+        ) },
         confirmButton = {
             TextButton(
                 onClick = onConfirm,) {
@@ -196,3 +205,19 @@ fun AddMemberDialog(username: String, onConfirm: () -> Unit, onCancel: () -> Uni
     )
 }
 
+@Composable
+fun PopupActivityError(message: String) {
+    // Your popup UI here
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.Red.copy(alpha = 0.8f))
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            color = Color.White
+        )
+    }
+}

@@ -2,6 +2,7 @@ package com.example.bubblify.view
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,6 +24,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.PersonRemove
+import androidx.compose.material.icons.outlined.RemoveCircleOutline
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -30,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -41,14 +45,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.bubblify.MainState
+import com.example.bubblify.model.Activity
 import com.example.bubblify.model.Reference
 import com.example.bubblify.model.User
+import com.example.bubblify.ui.theme.Purple40
 import com.example.bubblify.view.common.NavigationBar
 import com.example.bubblify.viewmodel.GroupSettingsViewModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,10 +68,13 @@ fun GroupSettingsPage(
 ) {
     var selectedChoice by remember { mutableStateOf("Members") }
     val users by viewModel.users.observeAsState(initial = emptyList())
+    val activities by viewModel.activities.observeAsState(initial = emptyList())
 
     LaunchedEffect(Unit) {
+        delay(500)
         if (groupId != null) {
             viewModel.fetchUsers(groupId)
+            viewModel.fetchActivities(groupId)
         }
     }
 
@@ -164,7 +176,7 @@ fun GroupSettingsPage(
 
             when (selectedChoice) {
                 "Members" -> DisplayMembersContent(users, mainState, groupId, viewModel)
-                "Activities" -> DisplayActivitiesContent()
+                "Activities" -> DisplayActivitiesContent(activities, mainState, groupId, viewModel)
             }
         }
         NavigationBar(mainState.navController)
@@ -172,7 +184,14 @@ fun GroupSettingsPage(
 }
 
 @Composable
-fun DisplayMembersContent(users: List<Reference<User>>, mainState: MainState, groupId: String?, viewModel: GroupSettingsViewModel) {
+fun DisplayMembersContent(
+    users: List<Reference<User>>,
+    mainState: MainState,
+    groupId: String?,
+    viewModel: GroupSettingsViewModel
+) {
+    var selectedUser by remember { mutableStateOf<Reference<User>?>(null) }
+
     LazyColumn (
         modifier = Modifier.padding(16.dp)
     ) {
@@ -203,11 +222,12 @@ fun DisplayMembersContent(users: List<Reference<User>>, mainState: MainState, gr
 
                     Icon(
                         imageVector = Icons.Outlined.PersonRemove,
-                        contentDescription = "Remove",
+                        contentDescription = "RemoveMember",
                         tint = Color.Red,
                         modifier = Modifier
                             .clickable {
                                 Log.d("user.id", user.reference.id)
+                                selectedUser = user
                             }
                             .padding(8.dp)
                     )
@@ -227,6 +247,24 @@ fun DisplayMembersContent(users: List<Reference<User>>, mainState: MainState, gr
             Spacer(
                 modifier = Modifier.height(8.dp)
             )
+
+            selectedUser?.let { user ->
+                RemoveMemberDialog(
+                    username = user.data.username,
+                    onConfirm = {
+                        // Handle OK button action
+                        if (groupId != null) {
+                            viewModel.removeUser(user, groupId)
+                        }
+                        selectedUser = null
+                        mainState.navigate("bubbleMain/$groupId")
+                    },
+                    onCancel = {
+                        // Handle Cancel button action
+                        selectedUser = null
+                    }
+                )
+            }
         }
     }
 
@@ -249,9 +287,125 @@ fun DisplayMembersContent(users: List<Reference<User>>, mainState: MainState, gr
 }
 
 @Composable
-fun DisplayActivitiesContent(/*activities: List<Reference<Activity>>, mainState: MainState,*/) {
+fun RemoveMemberDialog(username: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
+
+    AlertDialog(
+        shape = RoundedCornerShape(0.dp), // Adjust the corner radius as needed
+        containerColor = Color.White,
+        onDismissRequest = onCancel,
+        title = { Text(username) },
+        text = { Text(
+            text = "Do you want to remove this member?",
+        ) },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm,) {
+                Text(
+                    text = "OK",
+                    color = Color(4282692263)
+                )
+            } },
+        dismissButton = {
+            TextButton(
+                onClick = onCancel,) {
+                Text(
+                    text = "Cancel",
+                    color = Color(4282692263)
+                )
+            } },
+        modifier = Modifier.padding(0.dp)
+    )
+}
+
+@Composable
+fun DisplayActivitiesContent(
+    activities: List<Reference<Activity>>,
+    mainState: MainState,
+    groupId: String?,
+    viewModel: GroupSettingsViewModel
+) {
+    var selectedActivity by remember { mutableStateOf<Reference<Activity>?>(null) }
+
+    LazyColumn (
+        modifier = Modifier.padding(16.dp)
+    ) {
+        items(activities) { activity ->
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                if (activities == null) {
+                    // Waiting for the data (and avoid app crash)
+                    Text(text = "Loading...")
+                } else {
+                    Image(
+                        painter = painterResource(id = activity.data.icon!!.icon),
+                        contentDescription = "",
+                        colorFilter = ColorFilter.tint(Color.White),
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .border(1.dp, Color.Black, CircleShape)
+                            .background(Purple40)
+                            .padding(4.dp),
+                    )
+
+                    Text(
+                        text = activity.data.name,
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 12.dp)
+                    )
+
+                    Icon(
+                        imageVector = Icons.Outlined.RemoveCircleOutline,
+                        contentDescription = "RemoveActivity",
+                        tint = Color.Red,
+                        modifier = Modifier
+                            .clickable {
+                                selectedActivity = activity
+                            }
+                            .padding(8.dp)
+                    )
+                }
+            }
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(2.dp)
+                    .background(Color.LightGray)
+            )
+
+            Spacer(
+                modifier = Modifier.height(8.dp)
+            )
+
+            selectedActivity?.let { activity ->
+                RemoveActivityDialog(
+                    name = activity.data.name,
+                    onConfirm = {
+                        // Handle OK button action
+                        if (groupId != null) {
+                            viewModel.removeActivity(activity)
+                        }
+                        selectedActivity = null
+                        mainState.navigate("bubbleMain/$groupId")
+                    },
+                    onCancel = {
+                        // Handle Cancel button action
+                        selectedActivity = null
+                    }
+                )
+            }
+        }
+    }
     Button(
-        onClick = { /* Handle the button click action here */ },
+        onClick = { mainState.navigate("addActivities/$groupId") },
         modifier = Modifier
             .padding(16.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
@@ -266,4 +420,35 @@ fun DisplayActivitiesContent(/*activities: List<Reference<Activity>>, mainState:
             textAlign = TextAlign.Center
         )
     }
+}
+
+@Composable
+fun RemoveActivityDialog(name: String, onConfirm: () -> Unit, onCancel: () -> Unit) {
+
+    AlertDialog(
+        shape = RoundedCornerShape(0.dp), // Adjust the corner radius as needed
+        containerColor = Color.White,
+        onDismissRequest = onCancel,
+        title = { Text(name) },
+        text = { Text(
+            text = "Do you want to remove this activity?",
+        ) },
+        confirmButton = {
+            TextButton(
+                onClick = onConfirm,) {
+                Text(
+                    text = "OK",
+                    color = Color(4282692263)
+                )
+            } },
+        dismissButton = {
+            TextButton(
+                onClick = onCancel,) {
+                Text(
+                    text = "Cancel",
+                    color = Color(4282692263)
+                )
+            } },
+        modifier = Modifier.padding(0.dp)
+    )
 }

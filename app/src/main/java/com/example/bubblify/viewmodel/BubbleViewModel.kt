@@ -33,7 +33,20 @@ constructor(
                 _activities.value = value
             } catch (e: Exception){
                 // If there is an error, log it
-                Log.d("BubbleViewModel", "fetchGroups: ${e.message}")
+                Log.d("BubbleViewModel", "fetchActivities: ${e.message}")
+            }
+        }
+    }
+
+    fun changeGroupName(newName: String, group: Group, groupId: String) {
+        viewModelScope.launch {
+            try {
+                // Get all activities from a group
+                group.name = newName
+                storageService.updateGroup(groupId, group)
+            } catch (e: Exception){
+                // If there is an error, log it
+                Log.d("BubbleViewModel", "changeGroupName: ${e.message}")
             }
         }
     }
