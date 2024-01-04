@@ -1,4 +1,5 @@
 package com.example.bubblify.view
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -26,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,9 +60,18 @@ fun ProfilePage(
 
         //top bar
         CenterAlignedTopAppBar(
-            title = { Text("Profile", maxLines = 1) },
+            title = {
+                Text(
+                    "Profile",
+                    maxLines = 1,
+                    modifier = Modifier.testTag("profileTitle")
+                )
+            },
             navigationIcon = {
-                IconButton(onClick = { mainState.navigate("home") }) {
+                IconButton(
+                    onClick = { mainState.navigate("home") },
+                    modifier = Modifier.testTag("profileBackButton")
+                ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"
@@ -78,7 +89,8 @@ fun ProfilePage(
                 .offset(x = 95.dp, y = 112.dp)
                 .requiredSize(size = 169.dp)
                 .clip(shape = CircleShape)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .testTag("profilePicture"),
             contentScale = ContentScale.Crop
         )
 
@@ -114,7 +126,9 @@ fun ProfilePage(
                         y = 312.dp
                     )
                     .requiredWidth(width = 120.dp)
-                    .requiredHeight(height = 50.dp))
+                    .requiredHeight(height = 50.dp)
+                .testTag("profileUsernameField")
+        )
         }
 
         //navigation bar
