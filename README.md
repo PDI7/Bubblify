@@ -10,6 +10,43 @@ This could be an architectural diagram or a screenshot of the application.
 ## Architecture Overview (optional)
 
 TODO: Add simple diagram that explains the architecture.
+### Folder Structure
+Folder structure of the project
+```
+bubblify/
+├───app/
+│   ├───build/
+│   └───src/
+│       ├───androidTest/      
+│       ├───main/
+│       │   ├───java/com/example/
+│       │   │   └───bubblify/
+│       │   │       │   BubblifyApp.kt        <-- Routes/NavigationHost
+│       │   │       │   BubblifyHiltApp.kt    <-- ??
+│       │   │       │   MainActivity.kt       <-- Main file that be launched
+│       │   │       │   MainState.kt          <-- ??
+│       │   │       │
+│       │   │       ├───common/           <-- Checking fields input
+│       │   │       │
+│       │   │       ├───data/            
+│       │   │       ├───model/            <-- All the data layer
+│       │   │       │
+│       │   │       ├───service/          <-- service to interact with database (get/delete...)
+│       │   │       │
+│       │   │       ├───ui/               <-- all the defaults color, ui elements...
+│       │   │       │   └───theme/
+│       │   │       │
+│       │   │       ├───view/             <-- all the view's (UI part)
+│       │   │       │   └───common/       <-- some componants that can be used in View's
+│       │   │       │
+│       │   │       └───viewmodel/        <-- all the ViewModels (Fetching methods synchronized with the View)
+│       │   │           └───state/
+│       │   └───res/
+│       └───test/
+├───build/
+├───gradle/
+└───resources/
+```
 
 ## How to Use
 
