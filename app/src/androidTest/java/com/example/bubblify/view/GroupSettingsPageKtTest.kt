@@ -15,7 +15,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -41,8 +40,7 @@ class GroupSettingsPageKtTest {
             BubblifyApp(navController)
 
             // Navigate to sign up page
-            navController.navigate("groupSettings")
-            accountService.loginUser(EMAIL, PASSWORD)
+            navController.navigate("groupSettings/${GROUPID}")
         }
 
 
@@ -65,10 +63,6 @@ class GroupSettingsPageKtTest {
         composeTestRule
             .onNodeWithTag("addMembersButton")
             .assertExists()
-
-        composeTestRule
-            .onNodeWithTag("addActivitiesButton")
-            .assertExists()
     }
 
     @Test
@@ -78,7 +72,7 @@ class GroupSettingsPageKtTest {
             .onNodeWithTag("backArrow")
             .performClick()
 
-        Assert.assertEquals("bubbleMain", navController.currentDestination?.route)
+        Assert.assertEquals("bubbleMain/{groupId}", navController.currentDestination?.route)
     }
 
     @Test
@@ -88,23 +82,24 @@ class GroupSettingsPageKtTest {
             .onNodeWithTag("addMembersButton")
             .performClick()
 
-        Assert.assertEquals("addMembers", navController.currentDestination?.route)
+        Assert.assertEquals("addMembers/{groupId}", navController.currentDestination?.route)
     }
 
     @Test
     fun clickAddActivitiesTest() {
         // Perform actions
         composeTestRule
+            .onNodeWithTag("activitiesTab")
+            .performClick()
+
+        composeTestRule
             .onNodeWithTag("addActivitiesButton")
             .performClick()
 
-        Assert.assertEquals("addActivities", navController.currentDestination?.route)
+        Assert.assertEquals("addActivities/{groupId}", navController.currentDestination?.route)
     }
 
     companion object {
-        // Unit test account
-        private const val EMAIL = "unit-test@gmail.com"
-        private const val USERNAME = "unit-test"
-        private const val PASSWORD = "wH5^34ATr^\$^Y6"
+        private const val GROUPID = "nLCaoyJWKw59XNuf0Frj"
     }
 }

@@ -2,10 +2,9 @@ package com.example.bubblify.view
 
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.assertIsDisplayed
-import androidx.compose.ui.test.assertIsNotSelected
-import androidx.compose.ui.test.assertIsSelected
+import androidx.compose.ui.test.assertIsOff
+import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
@@ -13,18 +12,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.BubblifyApp
 import com.example.bubblify.MainActivity
 import com.example.bubblify.service.AccountService
-import com.google.common.base.Verify.verify
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
 import javax.inject.Inject
 
 @HiltAndroidTest
-class MorePageKtTest{
+class MorePageKtTest {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
@@ -46,7 +43,7 @@ class MorePageKtTest{
             BubblifyApp(navController)
 
             // Navigate to sign up page
-            navController.navigate("groupSettings")
+            navController.navigate("more")
             accountService.loginUser(EMAIL, PASSWORD)
         }
 
@@ -56,7 +53,7 @@ class MorePageKtTest{
     @Test
     fun MorePageComponentsTest() {
         composeTestRule
-            .onNodeWithTag("backArrow")
+            .onNodeWithTag("navigationBack")
             .assertExists()
 
         composeTestRule
@@ -72,27 +69,29 @@ class MorePageKtTest{
     fun clickBackTest() {
         // Perform actions
         composeTestRule
-            .onNodeWithTag("backArrow")
+            .onNodeWithTag("navigationBack")
             .performClick()
 
-        assertEquals("Expected destination after back navigation", "previousDestination", navController.currentDestination?.route)
+        assertEquals("home", navController.currentDestination?.route)
     }
 
     @Test
     fun switchDarkMode() {
         composeTestRule
-            .onNodeWithContentDescription("darkModeSwitch")
+            .onNodeWithTag("darkModeSwitch")
             .assertIsDisplayed()
-        composeTestRule
-            .onNodeWithContentDescription("darkModeSwitch")
-            .assertIsSelected()
 
         composeTestRule
-            .onNodeWithContentDescription("darkModeSwitch")
-            .performClick()
+            .onNodeWithTag("darkModeSwitch")
+            .assertIsOn()
+
         composeTestRule
-            .onNodeWithContentDescription("darkModeSwitch")
-            .assertIsNotSelected()
+            .onNodeWithTag("darkModeSwitch")
+            .performClick()
+
+        composeTestRule
+            .onNodeWithTag("darkModeSwitch")
+            .assertIsOff()
     }
 
 

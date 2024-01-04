@@ -128,7 +128,7 @@ fun AddActivitiesPage(
                                     selectedActivity = activity
                                 }
                                 .padding(8.dp)
-                                .testTag("AddActivityIcon")
+                                .testTag("addActivityIcon${activity.name}")
                         )
                     }
 

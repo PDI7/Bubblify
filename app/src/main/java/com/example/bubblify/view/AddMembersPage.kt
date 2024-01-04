@@ -122,7 +122,6 @@ fun AddMembersPage(
                                 .padding(start = 12.dp)
                         )
 
-
                         // Add remove icon button
                         Icon(
                             imageVector = Icons.Default.PersonAddAlt,
@@ -133,7 +132,7 @@ fun AddMembersPage(
                                     selectedUser = user
                                 }
                                 .padding(8.dp)
-                                .testTag("addMember")
+                                .testTag("addMember${user.data.username}}")
 
                         )
                     }

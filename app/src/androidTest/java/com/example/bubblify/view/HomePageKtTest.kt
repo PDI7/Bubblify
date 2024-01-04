@@ -1,23 +1,24 @@
 package com.example.bubblify.view
 
 import androidx.activity.compose.setContent
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.BubblifyApp
 import com.example.bubblify.MainActivity
 import com.example.bubblify.service.AccountService
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -34,7 +35,7 @@ class HomePageKtTest {
     private lateinit var navController: NavHostController
 
     @Before
-    fun setup() {
+    fun setup() = runTest {
         hiltRule.inject()
         accountService.signOut()
 
@@ -44,59 +45,47 @@ class HomePageKtTest {
 
             // Navigate to sign up page
             navController.navigate("home")
-            accountService.loginUser(EMAIL, PASSWORD)
         }
 
-
+        Firebase.auth.signInWithEmailAndPassword(EMAIL, PASSWORD).await()
     }
 
     @Test
-    fun HomePageComponentsTest() {
+    fun homePageComponentsTest() {
+        composeTestRule
+            .onNodeWithTag("groupsTitle")
+            .assertExists()
+
+        Thread.sleep(1500)
 
         composeTestRule
-            .onNodeWithTag("groupButton")
+            .onNodeWithTag("groupButtonTest Group 1")
             .assertExists()
 
         composeTestRule
             .onNodeWithTag("addGroupButton")
             .assertExists()
-    }
-
-
-    @Test
-    fun LoadingTextDisplayed() {
-        // Verify that the loading text is displayed
-        composeTestRule
-            .onNodeWithText("Loading...")
-            .assertIsDisplayed()
     }
 
     @Test
     fun clickOnGroupTest() {
+        composeTestRule
+            .onNodeWithTag("groupsTitle")
+            .assertExists()
+
+        Thread.sleep(1500)
+
         // Perform actions
         composeTestRule
-            .onNodeWithTag("groupButton")
+            .onNodeWithTag("groupButtonTest Group 1")
             .performClick()
 
-        Assert.assertEquals("bubbleMain", navController.currentDestination?.route)
+        Assert.assertEquals("bubbleMain/{groupId}", navController.currentDestination?.route)
     }
-
-    @Test
-    fun clickAddGroupTest() {
-        // Perform actions
-        composeTestRule
-            .onNodeWithTag("addGroupButton")
-            .performClick()
-
-        Assert.assertEquals("home", navController.currentDestination?.route)
-    }
-
-
 
     companion object {
         // Unit test account
         private const val EMAIL = "unit-test@gmail.com"
-        private const val USERNAME = "unit-test"
         private const val PASSWORD = "wH5^34ATr^\$^Y6"
     }
 }

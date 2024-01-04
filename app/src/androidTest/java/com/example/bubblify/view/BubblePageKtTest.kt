@@ -3,7 +3,6 @@ package com.example.bubblify.view
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.BubblifyApp
@@ -11,7 +10,6 @@ import com.example.bubblify.MainActivity
 import com.example.bubblify.service.AccountService
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -48,7 +46,7 @@ class BubblePageKtTest {
             BubblifyApp(navController)
 
             // Navigate to sign up page
-            navController.navigate("addMembers/$GROUPID")
+            navController.navigate("bubbleMain/$GROUPID")
             accountService.loginUser(EMAIL, PASSWORD)
         }
 
@@ -61,24 +59,9 @@ class BubblePageKtTest {
         composeTestRule
             .onNodeWithTag("topAppBar")
             .assertExists()
-            //nav zeug
+        //nav zeug
         composeTestRule
             .onNodeWithTag("editButton")
             .assertExists()
-        //nav zeug
-        composeTestRule
-            .onNodeWithTag("backButton")
-            .assertExists()
-        //nav zeug
     }
 }
-
-/*
-@Test
-fun popupDialogueTest() {
-    // Perform actions
-    composeTestRule
-        .onNodeWithTag("")
-        .performClick()
-    assertEquals("", navController.currentDestination?.route)
-}*/

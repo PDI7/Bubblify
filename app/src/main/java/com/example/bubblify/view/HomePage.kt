@@ -65,7 +65,12 @@ fun HomePage(
     ) {
 
         CenterAlignedTopAppBar(
-            title = { Text("Groups", maxLines = 1) },
+            title = {
+                Text(
+                    "Groups", maxLines = 1,
+                    modifier = Modifier.testTag("groupsTitle")
+                )
+            },
             actions = {
                 IconButton(onClick = { /* do something */ }) {
                     Icon(
@@ -109,7 +114,7 @@ fun HomePage(
                     .padding(16.dp, 0.dp)
                     .requiredWidth(width = 285.dp)
                     .requiredHeight(height = 60.dp)
-                    .then(Modifier.testTag("addGroupButton")),
+                    .testTag("addGroupButton"),
                 border = BorderStroke(1.dp, Color.Black),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 10.dp
@@ -134,20 +139,21 @@ fun GroupItem(
     navController: NavController,
     groupState: GroupState
 ) {
+    println("groupButton${group.name}")
+
     FilledTonalButton(
         onClick = {
             groupState.addGroup(group)
             navController.navigate("bubbleMain/$groupId")
         },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
-
         modifier = Modifier
             .offset(
                 x = 38.dp,
             )
             .requiredWidth(width = 285.dp)
             .requiredHeight(height = 60.dp)
-            .then(Modifier.testTag("groupButton")),
+            .testTag("groupButton${group.name}"),
         border = BorderStroke(1.dp, Color.Black),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 10.dp
