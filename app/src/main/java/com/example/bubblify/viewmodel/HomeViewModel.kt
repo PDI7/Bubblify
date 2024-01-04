@@ -6,6 +6,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.bubblify.model.Activity
+import com.example.bubblify.model.ActivityIcon
 import com.example.bubblify.model.Group
 import com.example.bubblify.model.Reference
 import com.example.bubblify.service.StorageService
@@ -57,6 +59,16 @@ constructor(
                 val group = Group(groupName, 4294902000)
 
                 val groupCreated = storageService.createGroup(group)
+
+                val defaultActivities = listOf(
+                    Activity(groupCreated, "Eat", ActivityIcon.EATING),
+                    Activity(groupCreated, "Sleep", ActivityIcon.SLEEPING),
+                    Activity(groupCreated, "Work", ActivityIcon.WORKING),
+                )
+
+                defaultActivities.forEach { defaultActivity ->
+                    storageService.addActivityToGroup(defaultActivity, groupCreated.id)
+                }
 
             } catch (e: Exception) {
                 Log.d("error", e.message.toString())
