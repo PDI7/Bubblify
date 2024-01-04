@@ -51,7 +51,7 @@ constructor(
                 var count = 0
 
                 // keep incrementing the count until a unique name is available
-                while (groups!!.any { it.name == groupName }) {
+                while (groups.any { it.name == groupName }) {
                     count++
                     groupName = "New Group ($count)"
                 }
@@ -70,6 +70,7 @@ constructor(
                     storageService.addActivityToGroup(defaultActivity, groupCreated.id)
                 }
 
+                fetchGroups()
             } catch (e: Exception) {
                 Log.d("error", e.message.toString())
             }

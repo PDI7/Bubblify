@@ -25,17 +25,11 @@ constructor(
     //======================== GROUP METHODS ========================//
     //===============================================================//
 
-    @Deprecated("Use getAllGroupsWithReferenceFromCurrentUser instead")
-    suspend fun getGroups(): List<Group>? =
+    suspend fun getGroups(): List<Group> =
         firestore.collection(GROUP_COLLECTION).get().await().toObjects()
 
     suspend fun getGroup(groupId: String): Group? =
         firestore.collection(GROUP_COLLECTION).document(groupId).get().await().toObject()
-
-    @Deprecated("Use getAllGroupsWithReferenceFromCurrentUser instead")
-    suspend fun getAllGroups(): List<Group> {
-        return firestore.collection(GROUP_COLLECTION).get().await().toObjects()
-    }
 
     // Get all the groups from the current User
     suspend fun getAllGroupsWithReferenceFromCurrentUser(): List<Reference<Group>> {
@@ -165,8 +159,8 @@ constructor(
     suspend fun getUsersFromSearch(
         querySearch: String,
         groupReferenceString: String
-    ): List<Reference<User>>? {
-        val allUsers = getUsersExceptInGroup(groupReferenceString) ?: return null
+    ): List<Reference<User>> {
+        val allUsers = getUsersExceptInGroup(groupReferenceString)
         return filterUsers(allUsers, querySearch)
     }
 
@@ -253,23 +247,6 @@ constructor(
     //======================== ACTIVITY METHODS =====================//
     //===============================================================//
 
-    @Deprecated("Use getActivitiesInGroup instead")
-    suspend fun getActivities(groupId: String): List<Reference<Activity>> {
-        // Get the DocumentReference with the groupId
-        val groupRef = firestore.document("/Groups/$groupId")
-        // Get all the activities from the current group and return the list
-        return firestore.collection(ACTIVITY_COLLECTION).whereEqualTo(GROUP_ID_FIELD, groupRef)
-            .get().await().documents
-            .mapNotNull { document ->
-                val activity = document.toObject<Activity>()
-                Reference(
-                    document.reference,
-                    activity!!
-                )
-            }
-            .toList()
-    }
-
     suspend fun getActivitiesInGroup(groupReferenceString: String): List<Reference<Activity>> {
         val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
 
@@ -289,7 +266,7 @@ constructor(
     }
 
     suspend fun addActivityToGroup(activity: Activity, groupReferenceString: String): DocumentReference {
-        var groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
+        val groupReference = firestore.collection(GROUP_COLLECTION).document(groupReferenceString)
 
         activity.groupId = groupReference
 

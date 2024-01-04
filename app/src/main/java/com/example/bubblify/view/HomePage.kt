@@ -1,7 +1,6 @@
 package com.example.bubblify.view
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -32,6 +30,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -109,7 +108,8 @@ fun HomePage(
                     )
                     .padding(16.dp, 0.dp)
                     .requiredWidth(width = 285.dp)
-                    .requiredHeight(height = 60.dp),
+                    .requiredHeight(height = 60.dp)
+                    .then(Modifier.testTag("addGroupButton")),
                 border = BorderStroke(1.dp, Color.Black),
                 elevation = ButtonDefaults.buttonElevation(
                     defaultElevation = 10.dp
@@ -136,7 +136,7 @@ fun GroupItem(
 ) {
     FilledTonalButton(
         onClick = {
-            groupState.addGroup(group, groupId)
+            groupState.addGroup(group)
             navController.navigate("bubbleMain/$groupId")
         },
         colors = ButtonDefaults.filledTonalButtonColors(Color(group.color)),
@@ -146,7 +146,8 @@ fun GroupItem(
                 x = 38.dp,
             )
             .requiredWidth(width = 285.dp)
-            .requiredHeight(height = 60.dp),
+            .requiredHeight(height = 60.dp)
+            .then(Modifier.testTag("groupButton")),
         border = BorderStroke(1.dp, Color.Black),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 10.dp

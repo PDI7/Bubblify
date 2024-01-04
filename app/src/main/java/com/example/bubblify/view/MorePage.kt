@@ -44,7 +44,11 @@ fun MorePage(
         CenterAlignedTopAppBar(
             title = { Text("More", maxLines = 1) },
             navigationIcon = {
-                IconButton(onClick = { mainState.navigate("home") }) {
+                IconButton(
+                    modifier = Modifier
+                        .then(Modifier.testTag("arrowBack")),
+                    onClick = { mainState.navController.popBackStack()
+                    }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"
@@ -72,6 +76,8 @@ fun MorePage(
                 )
 
                 Switch(
+                    modifier = Modifier
+                        .then(Modifier.testTag("darkModeSwitch")),
                     checked = checked,
                     onCheckedChange = {
                         checked = it

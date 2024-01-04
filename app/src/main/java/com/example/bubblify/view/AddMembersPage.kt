@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,7 +64,8 @@ fun AddMembersPage(
     ) {
         CenterAlignedTopAppBar(
             navigationIcon = {
-                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") }) {
+                IconButton(onClick = { mainState.navigate("groupSettings/$groupId") },
+                    modifier = Modifier.testTag("backButton")) {
                     Icon(
                         imageVector = Icons.Outlined.ArrowBack,
                         contentDescription = "ArrowBack"
@@ -90,7 +92,8 @@ fun AddMembersPage(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 16.dp)
+                    .testTag("searchBox"),
                 placeholder = {
                     Text(text = "Enter member username")
                 }
@@ -130,6 +133,8 @@ fun AddMembersPage(
                                     selectedUser = user
                                 }
                                 .padding(8.dp)
+                                .testTag("addMember")
+
                         )
                     }
 
