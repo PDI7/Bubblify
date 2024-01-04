@@ -4,14 +4,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
@@ -69,44 +64,4 @@ fun NavigationBar(navController : NavController) {
             )
         }
     }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BackNavigation(backAction: () -> Unit) {
-    CenterAlignedTopAppBar(
-        title = { Text("Groups", maxLines = 1) },
-        navigationIcon = {
-            IconButton(onClick = backAction) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "get back"
-                )
-            }
-        }
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BackNavigationWithNotificationIcon(onClickBack: () -> Unit, onClickNotification: () -> Unit) {
-    CenterAlignedTopAppBar(
-        title = { Text("Groups", maxLines = 1) },
-        navigationIcon = {
-            IconButton(onClick = onClickBack) {
-                Icon(
-                    imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "get back"
-                )
-            }
-        },
-        actions = {
-            IconButton(onClick = onClickNotification) {
-                Icon(
-                    imageVector = Icons.Outlined.Notifications,
-                    contentDescription = "Notification"
-                )
-            }
-        }
-    )
 }
