@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.bubblify.view.AddActivitiesPage
 import com.example.bubblify.view.AddMembersPage
 import com.example.bubblify.view.BubblePage
 import com.example.bubblify.view.GroupSettingsPage
@@ -58,6 +59,14 @@ fun BubblifyApp(navController: NavHostController = rememberNavController()) {
         ) { backStackEntry ->
             val groupId = backStackEntry.arguments?.getString("groupId")
             AddMembersPage(mainState, groupId)
+        }
+
+        composable(
+            "addActivities/{groupId}",
+            arguments = listOf(navArgument("groupId") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val groupId = backStackEntry.arguments?.getString("groupId")
+            AddActivitiesPage(mainState, groupId)
         }
     }
 }
