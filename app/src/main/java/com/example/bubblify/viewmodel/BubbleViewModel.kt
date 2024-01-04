@@ -42,7 +42,7 @@ constructor(
         viewModelScope.launch {
             try {
                 // Get all activities from a group
-                val value = storageService.getActivities(groupId)
+                val value = storageService.getActivitiesInGroup(groupId)
                 _activities.value = value.sortedBy { it.data.name }
             } catch (e: Exception){
                 // If there is an error, log it
