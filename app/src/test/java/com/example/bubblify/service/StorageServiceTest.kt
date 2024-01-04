@@ -2,11 +2,8 @@ package com.example.bubblify.service
 
 import com.example.bubblify.model.Reference
 import com.example.bubblify.model.User
-import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -23,12 +20,6 @@ class StorageServiceTest {
 
     @Mock
     private lateinit var auth: AccountService
-
-    @Mock
-    private lateinit var colRef: CollectionReference
-
-    @Mock
-    private lateinit var mockTest: Task<QuerySnapshot>
 
     private lateinit var storageService: StorageService
 
