@@ -38,26 +38,6 @@ constructor(
     }
 
     // Get all the groups from the current User
-    @Deprecated("Use getAllGroupsWithReferenceFromCurrentUser instead")
-    suspend fun getAllGroupsFromCurrentUser(): List<Group> {
-        // Get the current user ID
-        val userReference = firestore.collection(USER_COLLECTION).document(auth.currentUserId)
-        // Fetch all the groups where the user are
-        val userGroups =
-            firestore.collection(USER_GROUP_COLLECTION).whereEqualTo(USER_ID_FIELD, userReference)
-                .get().await()
-        // Fetch all the groups where the reference (groupId) corresponding
-        val groups = userGroups.documents
-            .filter { it.exists() }
-            .mapNotNull { document ->
-                val groupReference = document.getDocumentReference(GROUP_ID_FIELD)
-                groupReference!!.get().await().toObject<Group>()
-            }
-            .toList()
-        // Return the list
-        return groups
-    }
-
     suspend fun getAllGroupsWithReferenceFromCurrentUser(): List<Reference<Group>> {
         // Get the current user ID
         val userReference = firestore.collection(USER_COLLECTION).document(auth.currentUserId)
