@@ -23,10 +23,7 @@ class SetActivityViewModel @Inject constructor(
     val activities: LiveData<List<Reference<Activity>>> = _activities
 
     suspend fun getActivitiesByGroupReference(groupId: String) {
-        val groupReference =
-            firestore.collection(StorageService.GROUP_COLLECTION)
-                .document(groupId)
-        _activities.value = storageService.getActivitiesInGroup(groupReference)
+        _activities.value = storageService.getActivitiesInGroup(groupId)
 
     }
 
