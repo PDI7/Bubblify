@@ -22,7 +22,7 @@ import com.example.bubblify.viewmodel.state.GroupState
 fun BubblifyApp(navController: NavHostController = rememberNavController()) {
     val mainState = MainState(navController)
     val groupState = GroupState()
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "home") {
         composable("profile") { ProfilePage(mainState) }
         composable("login") { LoginPage(mainState) }
         composable("signUp") { SignUpPage(mainState) }
