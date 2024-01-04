@@ -9,8 +9,12 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.BubblifyApp
 import com.example.bubblify.MainActivity
 import com.example.bubblify.service.AccountService
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -31,7 +35,7 @@ class HomePageKtTest {
     private lateinit var navController: NavHostController
 
     @Before
-    fun setup() {
+    fun setup() = runTest {
         hiltRule.inject()
         accountService.signOut()
 
@@ -43,14 +47,19 @@ class HomePageKtTest {
             navController.navigate("home")
         }
 
-
+        Firebase.auth.signInWithEmailAndPassword(EMAIL, PASSWORD).await()
     }
 
     @Test
     fun homePageComponentsTest() {
+        composeTestRule
+            .onNodeWithTag("groupsTitle")
+            .assertExists()
+
+        Thread.sleep(1000)
 
         composeTestRule
-            .onNodeWithTag("groupButton")
+            .onNodeWithTag("groupButtonTest Group 1")
             .assertExists()
 
         composeTestRule
@@ -60,16 +69,28 @@ class HomePageKtTest {
 
     @Test
     fun clickOnGroupTest() {
+        composeTestRule
+            .onNodeWithTag("groupsTitle")
+            .assertExists()
+
+        Thread.sleep(1000)
+
         // Perform actions
         composeTestRule
-            .onNodeWithTag("groupButton")
+            .onNodeWithTag("groupButtonTest Group 1")
             .performClick()
 
-        Assert.assertEquals("bubbleMain", navController.currentDestination?.route)
+        Assert.assertEquals("bubbleMain/{groupId}", navController.currentDestination?.route)
     }
 
     @Test
     fun clickAddGroupTest() {
+        composeTestRule
+            .onNodeWithTag("groupsTitle")
+            .assertExists()
+
+        Thread.sleep(1000)
+
         // Perform actions
         composeTestRule
             .onNodeWithTag("addGroupButton")
@@ -78,11 +99,9 @@ class HomePageKtTest {
         Assert.assertEquals("home", navController.currentDestination?.route)
     }
 
-
     companion object {
         // Unit test account
         private const val EMAIL = "unit-test@gmail.com"
-        private const val USERNAME = "unit-test"
         private const val PASSWORD = "wH5^34ATr^\$^Y6"
     }
 }

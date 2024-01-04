@@ -63,7 +63,5 @@ class BubblePageKtTest {
         composeTestRule
             .onNodeWithTag("editButton")
             .assertExists()
-        //nav zeug
-        //nav zeug
     }
 }
