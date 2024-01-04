@@ -199,7 +199,6 @@ constructor(
     }
 
     suspend fun doesUsernameExist(username: String): Boolean {
-        println("Weeeeeeeeee4")
         val users =
             firestore.collection(USER_COLLECTION).whereEqualTo(USER_NAME_FIELD, username).get()
                 .await()
