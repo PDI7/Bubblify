@@ -226,6 +226,24 @@ constructor(
             .await()
     }
 
+    suspend fun filterUsersGroupsFromActivities(
+        activityReference: DocumentReference
+    ): List<Reference<UserGroup>> {
+        return firestore.collection(USER_GROUP_COLLECTION)
+            .whereEqualTo(ACTIVITY_ID_FIELD, activityReference)
+            .get()
+            .await()
+            .documents
+            .mapNotNull { document ->
+                val activity = document.toObject<UserGroup>()
+                Reference(
+                    document.reference,
+                    activity!!
+                )
+            }
+            .toList()
+    }
+
     suspend fun addUserToGroup(
         userReference: DocumentReference,
         groupReferenceString: String
@@ -257,12 +275,20 @@ constructor(
     //===============================================================//
 
     @Deprecated("Use getActivitiesInGroup instead")
-    suspend fun getActivities(groupId: String): List<Activity> {
+    suspend fun getActivities(groupId: String): List<Reference<Activity>> {
         // Get the DocumentReference with the groupId
         val groupRef = firestore.document("/Groups/$groupId")
         // Get all the activities from the current group and return the list
         return firestore.collection(ACTIVITY_COLLECTION).whereEqualTo(GROUP_ID_FIELD, groupRef)
-            .get().await().toObjects<Activity>()
+            .get().await().documents
+            .mapNotNull { document ->
+                val activity = document.toObject<Activity>()
+                Reference(
+                    document.reference,
+                    activity!!
+                )
+            }
+            .toList()
     }
 
     suspend fun getActivitiesInGroup(groupReferenceString: String): List<Reference<Activity>> {
