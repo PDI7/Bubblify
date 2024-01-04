@@ -118,7 +118,7 @@ class StorageServiceTest {
         val groupReference = storageService.createGroup(Group(groupName))
 
         // Act
-        storageService.addUserToGroup(userReference.reference, groupReference)
+        storageService.addUserToGroup(userReference.reference, groupReference.id)
 
         // Assert
         val groups = storageService.getAllGroupsWithReferenceFromCurrentUser()
@@ -126,7 +126,7 @@ class StorageServiceTest {
 
 
         // Clean up
-        storageService.removeUserFromGroup(userReference.reference, groupReference)
+        storageService.removeUserFromGroup(userReference.reference, groupReference.id)
         storageService.deleteGroup(groupReference.id)
     }
 
@@ -160,31 +160,25 @@ class StorageServiceTest {
     @Test
     fun createDeleteActivity() = runTest {
         // Arrange
-        val groupReference =
-            firestore.collection(StorageService.GROUP_COLLECTION).document(GROUP_1_ID)
-        val activity = Activity(groupReference, ACTIVITY_1, ActivityIcon.EATING)
+        val activity = Activity(null, ACTIVITY_1, ActivityIcon.EATING)
 
         // Act
-        val activityReference = storageService.createActivity(activity)
+        val activityReference = storageService.addActivityToGroup(activity, GROUP_1_ID)
 
         // Assert
         val result = activityReference.get().await().toObject<Activity>()
         assertEquals(ACTIVITY_1, result!!.name)
         assertEquals(ActivityIcon.EATING, result.icon)
-        assertEquals(groupReference, result.groupId)
+        assertEquals(GROUP_1_ID, result.groupId!!.id)
 
         // Clean up
-        storageService.deleteActivity(activityReference)
+        storageService.removeActivityFromGroup(activityReference)
     }
 
     @Test
     fun getActivitiesInGroup() = runTest {
-        // Arrange
-        val groupReference =
-            firestore.collection(StorageService.GROUP_COLLECTION).document(GROUP_1_ID)
-
         // Act
-        val activities = storageService.getActivitiesInGroup(groupReference)
+        val activities = storageService.getActivitiesInGroup(GROUP_1_ID)
 
         // Assert
         assertNotNull(activities)
