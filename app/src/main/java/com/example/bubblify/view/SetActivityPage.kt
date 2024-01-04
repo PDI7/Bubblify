@@ -23,6 +23,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
@@ -81,6 +82,9 @@ fun SetActivityPage(
         if (activityList == null) {
             // Waiting for the data (and avoid app crash)
             CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(top = 60.dp)
+                    .align(Alignment.TopCenter),
                 color = MaterialTheme.colorScheme.secondary
             )
         } else {

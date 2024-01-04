@@ -84,10 +84,6 @@ class SetActivityPageKtTest {
     }
 
     companion object {
-        // Unit test account
-        private const val EMAIL = "unit-test@gmail.com"
-        private const val PASSWORD = "wH5^34ATr^\$^Y6"
-
         // Unit test group
         private const val GROUP_1_ID = "nLCaoyJWKw59XNuf0Frj"
     }
