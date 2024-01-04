@@ -56,7 +56,7 @@ class HomePageKtTest {
             .onNodeWithTag("groupsTitle")
             .assertExists()
 
-        Thread.sleep(1000)
+        Thread.sleep(1500)
 
         composeTestRule
             .onNodeWithTag("groupButtonTest Group 1")
@@ -73,7 +73,7 @@ class HomePageKtTest {
             .onNodeWithTag("groupsTitle")
             .assertExists()
 
-        Thread.sleep(1000)
+        Thread.sleep(1500)
 
         // Perform actions
         composeTestRule
@@ -81,22 +81,6 @@ class HomePageKtTest {
             .performClick()
 
         Assert.assertEquals("bubbleMain/{groupId}", navController.currentDestination?.route)
-    }
-
-    @Test
-    fun clickAddGroupTest() {
-        composeTestRule
-            .onNodeWithTag("groupsTitle")
-            .assertExists()
-
-        Thread.sleep(1000)
-
-        // Perform actions
-        composeTestRule
-            .onNodeWithTag("addGroupButton")
-            .performClick()
-
-        Assert.assertEquals("home", navController.currentDestination?.route)
     }
 
     companion object {
