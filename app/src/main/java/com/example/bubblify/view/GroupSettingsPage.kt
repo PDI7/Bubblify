@@ -46,6 +46,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -89,7 +90,11 @@ fun GroupSettingsPage(
         ) {
             CenterAlignedTopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = { mainState.navigate("bubbleMain/$groupId") }) {
+                    IconButton(
+                        modifier = Modifier
+                            .then(Modifier.testTag("backArrow")),
+                        onClick = { mainState.navigate("bubbleMain/$groupId")
+                        }) {
                         Icon(
                             imageVector = Icons.Outlined.ArrowBack,
                             contentDescription = "ArrowBack"
@@ -119,7 +124,8 @@ fun GroupSettingsPage(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(0.dp))
                             .background(Color.Transparent)
-                            .height(35.dp),
+                            .height(35.dp)
+                            .then(Modifier.testTag("membersTab")),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
                             contentColor = Color.White
@@ -150,7 +156,8 @@ fun GroupSettingsPage(
                             .fillMaxWidth()
                             .clip(RoundedCornerShape(0.dp))
                             .background(Color.Transparent)
-                            .height(35.dp),
+                            .height(35.dp)
+                            .then(Modifier.testTag("activitiesTab")),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
                             contentColor = Color.Black
@@ -160,7 +167,6 @@ fun GroupSettingsPage(
                         Text(
                             text = "Activities",
                             color = if (selectedChoice == "Activities") Color.Black else Color.LightGray,
-                            //fontSize = 16.sp,
                             maxLines = 1
                         )
                     }
@@ -271,7 +277,8 @@ fun DisplayMembersContent(
     Button(
         onClick = { mainState.navigate("addMembers/$groupId") },
         modifier = Modifier
-            .padding(16.dp),
+            .padding(16.dp)
+            .then(Modifier.testTag("addMembersButton")),
         colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
         border = BorderStroke(1.dp, Color.Black),
         elevation = ButtonDefaults.buttonElevation(
@@ -407,7 +414,8 @@ fun DisplayActivitiesContent(
     Button(
         onClick = { mainState.navigate("addActivities/$groupId") },
         modifier = Modifier
-            .padding(16.dp),
+            .padding(16.dp)
+            .then(Modifier.testTag("addActivitiesButton")),
         colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
         border = BorderStroke(1.dp, Color.Black),
         elevation = ButtonDefaults.buttonElevation(
