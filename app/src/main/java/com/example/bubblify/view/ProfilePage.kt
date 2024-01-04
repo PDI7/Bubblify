@@ -60,7 +60,7 @@ fun ProfilePage(
         CenterAlignedTopAppBar(
             title = { Text("Profile", maxLines = 1) },
             navigationIcon = {
-                IconButton(onClick = { /* do something */ }) {
+                IconButton(onClick = { mainState.navigate("home") }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"
@@ -110,7 +110,7 @@ fun ProfilePage(
                 modifier = Modifier
                     .align(alignment = Alignment.TopStart)
                     .offset(
-                        x = 120.dp,
+                        x = 150.dp,
                         y = 312.dp
                     )
                     .requiredWidth(width = 120.dp)
