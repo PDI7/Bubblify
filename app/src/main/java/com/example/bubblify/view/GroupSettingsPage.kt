@@ -415,8 +415,11 @@ fun DisplayActivitiesContent(
         onClick = { mainState.navigate("addActivities/$groupId") },
         modifier = Modifier
             .padding(16.dp)
-            .then(Modifier.testTag("addActivitiesButton")),
-        colors = ButtonDefaults.buttonColors(containerColor = Color.White, contentColor = Color.Black),
+            .testTag("addActivitiesButton"),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.White,
+            contentColor = Color.Black
+        ),
         border = BorderStroke(1.dp, Color.Black),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 10.dp

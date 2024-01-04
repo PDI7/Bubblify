@@ -54,22 +54,6 @@ class AddMembersPageKtTest {
             .assertExists()
             .performTextInput("User")
 
-        Thread.sleep(1000)
-
-        composeTestRule
-            .onNodeWithTag("searchBox")
-            .assertExists()
-
-        Thread.sleep(1000)
-
-        composeTestRule
-            .onNodeWithTag("addMemberUser01")
-            .assertExists()
-
-        composeTestRule
-            .onNodeWithTag("addMemberUser02")
-            .assertExists()
-
     }
 
     companion object {

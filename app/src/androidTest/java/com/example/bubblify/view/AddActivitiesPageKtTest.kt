@@ -60,7 +60,6 @@ class AddActivitiesPageKtTest {
     }
 
     companion object {
-        // Unit test account
         private const val GROUPID = "nLCaoyJWKw59XNuf0Frj"
     }
 }
