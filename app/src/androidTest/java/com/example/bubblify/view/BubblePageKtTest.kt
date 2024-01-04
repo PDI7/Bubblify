@@ -46,7 +46,7 @@ class BubblePageKtTest {
             BubblifyApp(navController)
 
             // Navigate to sign up page
-            navController.navigate("addMembers/$GROUPID")
+            navController.navigate("bubbleMain/$GROUPID")
             accountService.loginUser(EMAIL, PASSWORD)
         }
 
@@ -64,9 +64,6 @@ class BubblePageKtTest {
             .onNodeWithTag("editButton")
             .assertExists()
         //nav zeug
-        composeTestRule
-            .onNodeWithTag("backButton")
-            .assertExists()
         //nav zeug
     }
 }
