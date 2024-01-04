@@ -13,18 +13,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.BubblifyApp
 import com.example.bubblify.MainActivity
 import com.example.bubblify.service.AccountService
-import com.google.common.base.Verify.verify
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
 import javax.inject.Inject
 
 @HiltAndroidTest
-class MorePageKtTest{
+class MorePageKtTest {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
 
@@ -75,7 +73,11 @@ class MorePageKtTest{
             .onNodeWithTag("backArrow")
             .performClick()
 
-        assertEquals("Expected destination after back navigation", "previousDestination", navController.currentDestination?.route)
+        assertEquals(
+            "Expected destination after back navigation",
+            "previousDestination",
+            navController.currentDestination?.route
+        )
     }
 
     @Test

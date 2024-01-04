@@ -15,7 +15,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -42,7 +41,6 @@ class GroupSettingsPageKtTest {
 
             // Navigate to sign up page
             navController.navigate("groupSettings")
-            accountService.loginUser(EMAIL, PASSWORD)
         }
 
 

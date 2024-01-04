@@ -3,7 +3,6 @@ package com.example.bubblify.view
 import androidx.activity.compose.setContent
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.bubblify.BubblifyApp
@@ -11,7 +10,6 @@ import com.example.bubblify.MainActivity
 import com.example.bubblify.service.AccountService
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,14 +17,6 @@ import javax.inject.Inject
 
 @HiltAndroidTest
 class AddActivitiesPageKtTest {
-
-    companion object {
-        // Unit test account
-        private const val EMAIL = "unit-test@gmail.com"
-        private const val USERNAME = "unit-test"
-        private const val PASSWORD = "wH5^34ATr^\$^Y6"
-        private const val GROUPID = "nLCaoyJWKw59XNuf0Frj"
-    }
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
@@ -49,30 +39,28 @@ class AddActivitiesPageKtTest {
 
             // Navigate to sign up page
             navController.navigate("addActivities/$GROUPID")
-            accountService.loginUser(EMAIL, PASSWORD)
         }
-
-
     }
-
 
     @Test
     fun addActivityComponentsTest() {
         composeTestRule
             .onNodeWithTag("navigationBack")
             .assertExists()
+
+        Thread.sleep(1000)
+
         composeTestRule
-            .onNodeWithTag("AddActivityIcon")
+            .onNodeWithTag("addActivityIconSport")
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithTag("addActivityIconParty")
             .assertExists()
     }
-}
 
-    /*
-    @Test
-    fun popupDialogueTest() {
-        // Perform actions
-        composeTestRule
-            .onNodeWithTag("")
-            .performClick()
-        assertEquals("", navController.currentDestination?.route)
-    }*/
+    companion object {
+        // Unit test account
+        private const val GROUPID = "nLCaoyJWKw59XNuf0Frj"
+    }
+}

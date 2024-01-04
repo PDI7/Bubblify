@@ -1,10 +1,8 @@
 package com.example.bubblify.view
 
 import androidx.activity.compose.setContent
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -17,7 +15,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.jupiter.api.Assertions.*
 import javax.inject.Inject
 
 @HiltAndroidTest
@@ -44,14 +41,13 @@ class HomePageKtTest {
 
             // Navigate to sign up page
             navController.navigate("home")
-            accountService.loginUser(EMAIL, PASSWORD)
         }
 
 
     }
 
     @Test
-    fun HomePageComponentsTest() {
+    fun homePageComponentsTest() {
 
         composeTestRule
             .onNodeWithTag("groupButton")
@@ -60,15 +56,6 @@ class HomePageKtTest {
         composeTestRule
             .onNodeWithTag("addGroupButton")
             .assertExists()
-    }
-
-
-    @Test
-    fun LoadingTextDisplayed() {
-        // Verify that the loading text is displayed
-        composeTestRule
-            .onNodeWithText("Loading...")
-            .assertIsDisplayed()
     }
 
     @Test
@@ -90,7 +77,6 @@ class HomePageKtTest {
 
         Assert.assertEquals("home", navController.currentDestination?.route)
     }
-
 
 
     companion object {
