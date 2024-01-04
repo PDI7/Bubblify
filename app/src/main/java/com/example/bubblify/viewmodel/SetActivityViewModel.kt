@@ -23,7 +23,7 @@ class SetActivityViewModel @Inject constructor(
     val activities: LiveData<List<Reference<Activity>>> = _activities
 
     suspend fun getActivitiesByGroupReference(groupId: String) {
-        _activities.value = storageService.getActivitiesInGroup(groupId)
+        _activities.postValue(storageService.getActivitiesInGroup(groupId))
 
     }
 

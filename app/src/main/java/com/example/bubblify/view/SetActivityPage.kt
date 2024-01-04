@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -58,6 +59,7 @@ fun SetActivityPage(
                 Text(
                     "Set Activity",
                     maxLines = 1,
+                    modifier = Modifier.testTag("setActivityTitle")
                 )
             },
             navigationIcon = {
@@ -80,14 +82,19 @@ fun SetActivityPage(
                 columns = GridCells.Fixed(3),
                 content = {
                     items(activityList!!.size) { index ->
+                        println("activityButton${activityList!![index].data.name}")
                         FilledIconButton(
                             modifier = Modifier
                                 .aspectRatio(1f)
-                                .padding(8.dp),
+                                .padding(8.dp)
+                                .testTag("activityButton${activityList!![index].data.name}"),
                             onClick = {
                                 if (groupId != null) {
                                     coroutine.launch {
-                                        setActivityViewModel.setActivityForUserInGroup(groupId, activityList!![index].reference)
+                                        setActivityViewModel.setActivityForUserInGroup(
+                                            groupId,
+                                            activityList!![index].reference
+                                        )
                                         mainState.navigate("bubbleMain/${groupId}")
                                     }
                                 }
