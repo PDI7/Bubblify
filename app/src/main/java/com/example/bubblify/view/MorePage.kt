@@ -45,10 +45,9 @@ fun MorePage(
             title = { Text("More", maxLines = 1) },
             navigationIcon = {
                 IconButton(
-                    modifier = Modifier
-                        .then(Modifier.testTag("arrowBack")),
-                    onClick = { mainState.navController.popBackStack()
-                    }) {
+                    modifier = Modifier.testTag("navigationBack"),
+                    onClick = { mainState.navigate("home") }
+                ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"
@@ -77,7 +76,7 @@ fun MorePage(
 
                 Switch(
                     modifier = Modifier
-                        .then(Modifier.testTag("darkModeSwitch")),
+                        .testTag("darkModeSwitch"),
                     checked = checked,
                     onCheckedChange = {
                         checked = it
@@ -88,7 +87,7 @@ fun MorePage(
             SecondaryButton(
                 text = "Log out", modifier = Modifier
                     .basicButton()
-                    .then(Modifier.testTag("logoutButton"))
+                    .testTag("logoutButton")
             ) {
                 moreViewModel.logout(mainState)
             }
