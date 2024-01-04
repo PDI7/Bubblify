@@ -4,6 +4,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.bubblify.model.Activity
 import com.example.bubblify.model.ActivityIcon
 import com.example.bubblify.model.Group
+import com.example.bubblify.model.Reference
 import com.example.bubblify.model.User
 import com.example.bubblify.model.UserGroup
 import com.google.firebase.Firebase
@@ -61,7 +62,7 @@ class StorageServiceTest {
     @Test
     fun getAllGroupsFromCurrentUser() = runTest {
         // Act
-        val groups = storageService.getAllGroupsFromCurrentUser()
+        val groups = storageService.getAllGroupsWithReferenceFromCurrentUser()
 
         // Assert
         assertNotNull(groups)
@@ -72,9 +73,10 @@ class StorageServiceTest {
 
     @Test
     fun getAllUsersFromGroup() = runTest {
-        //
+        // Act
         val users = storageService.getAllUsersFromGroup("PeUMRcsjAhi0qGtYWeU0")
 
+        // Assert
         assertNotNull(users)
     }
 
@@ -185,8 +187,8 @@ class StorageServiceTest {
         assertTrue(activities.isNotEmpty())
     }
 
-    private fun assertContains(groups: List<Group>, s: String) {
-        assertTrue(groups.any { it.name == s })
+    private fun assertContains(groups: List<Reference<Group>>, s: String) {
+        assertTrue(groups.any { it.data.name == s })
     }
 
     companion object {

@@ -11,10 +11,12 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -63,7 +65,10 @@ fun SetActivityPage(
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { mainState.navigate("bubbleMain/${groupId}") }) {
+                IconButton(
+                    onClick = { mainState.navigate("bubbleMain/${groupId}") },
+                    modifier = Modifier.testTag("setActivityBackButton")
+                ) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = "get back"
@@ -75,14 +80,15 @@ fun SetActivityPage(
         val coroutine = rememberCoroutineScope()
         if (activityList == null) {
             // Waiting for the data (and avoid app crash)
-            Text(text = "Loading...")
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.secondary
+            )
         } else {
             LazyVerticalGrid(
                 modifier = Modifier.padding(top = 60.dp),
                 columns = GridCells.Fixed(3),
                 content = {
                     items(activityList!!.size) { index ->
-                        println("activityButton${activityList!![index].data.name}")
                         FilledIconButton(
                             modifier = Modifier
                                 .aspectRatio(1f)

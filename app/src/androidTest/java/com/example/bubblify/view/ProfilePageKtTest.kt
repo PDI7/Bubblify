@@ -12,15 +12,14 @@ import com.example.bubblify.service.AccountService
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
 
-
 @HiltAndroidTest
-class SetActivityPageKtTest {
+class ProfilePageKtTest {
 
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<MainActivity>()
@@ -43,7 +42,7 @@ class SetActivityPageKtTest {
             BubblifyApp(navController)
 
             // Navigate to sign up page
-            navController.navigate("setActivity/$GROUP_1_ID")
+            navController.navigate("profile")
         }
 
     }
@@ -51,36 +50,31 @@ class SetActivityPageKtTest {
     @Test
     fun setActivityPageComponentsTest() {
         composeTestRule
-            .onNodeWithTag("setActivityTitle")
-            .assertExists()
-
-        Thread.sleep(1000)
-
-        composeTestRule
-            .onNodeWithTag("activityButtonWork")
+            .onNodeWithTag("profileTitle")
             .assertExists()
 
         composeTestRule
-            .onNodeWithTag("activityButtonFika")
+            .onNodeWithTag("profileBackButton")
             .assertExists()
 
         composeTestRule
-            .onNodeWithTag("activityButtonSleep")
+            .onNodeWithTag("profilePicture")
             .assertExists()
 
         composeTestRule
-            .onNodeWithTag("activityButtonGym")
+            .onNodeWithTag("profileUsernameField")
             .assertExists()
+
     }
 
     @Test
-    fun setActivityBackButtonTest() {
+    fun profileBackButtonTest() {
         composeTestRule
-            .onNodeWithTag("setActivityBackButton")
+            .onNodeWithTag("profileBackButton")
             .assertExists()
             .performClick()
 
-        Assert.assertEquals("bubbleMain/{groupId}", navController.currentDestination?.route)
+        assertEquals("home", navController.currentDestination?.route)
     }
 
     companion object {
